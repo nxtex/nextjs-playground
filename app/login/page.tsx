@@ -86,7 +86,6 @@ export default function LoginPage() {
           style={{ rotateX, rotateY }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          whileHover={{ z: 10 } as any}
         >
           <div className="relative group">
             {/* Traveling light beams */}
