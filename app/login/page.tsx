@@ -48,7 +48,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen w-screen bg-black relative overflow-hidden flex items-center justify-center">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#ff9900]/40 via-[#cc7a00]/50 to-black" />
 
       {/* Noise texture */}
       <div
@@ -60,14 +60,16 @@ export default function LoginPage() {
       />
 
       {/* Glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] bg-purple-400/20 blur-[80px]" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] blur-[80px]" style={{ backgroundColor: 'rgba(255,153,0,0.20)' }} />
       <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full bg-purple-300/20 blur-[60px]"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full blur-[60px]"
+        style={{ backgroundColor: 'rgba(255,153,0,0.20)' }}
         animate={{ opacity: [0.15, 0.3, 0.15], scale: [0.98, 1.02, 0.98] }}
         transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
       />
       <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vh] h-[90vh] rounded-t-full bg-purple-400/20 blur-[60px]"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vh] h-[90vh] rounded-t-full blur-[60px]"
+        style={{ backgroundColor: 'rgba(255,153,0,0.20)' }}
         animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
         transition={{ duration: 6, repeat: Infinity, repeatType: "mirror", delay: 1 }}
       />
@@ -253,8 +255,8 @@ export default function LoginPage() {
                   disabled={isLoading}
                   className="w-full relative group/button mt-5"
                 >
-                  <div className="absolute inset-0 bg-white/10 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300" />
-                  <div className="relative overflow-hidden bg-white text-black font-medium h-10 rounded-lg flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300" style={{ backgroundColor: 'rgba(255,153,0,0.3)' }} />
+                  <div className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ff9900' }}>
                     <AnimatePresence mode="wait">
                       {isLoading ? (
                         <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
