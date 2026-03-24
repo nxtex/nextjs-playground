@@ -136,7 +136,7 @@ export default function LoginPage() {
                   transition={{ type: "spring", duration: 0.8 }}
                   className="mx-auto w-10 h-10 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden"
                 >
-                  <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">S</span>
+                  <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">MB</span>
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
                 </motion.div>
                 <motion.h1
@@ -147,14 +147,6 @@ export default function LoginPage() {
                 >
                   Welcome Back
                 </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-white/60 text-xs"
-                >
-                  Sign in to continue to StyleMe
-                </motion.p>
               </div>
 
               {/* Form */}
