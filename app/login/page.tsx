@@ -47,14 +47,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-screen relative overflow-hidden flex items-center justify-center" style={{ backgroundColor: '#0a0a0a' }}>
-      {/* Starfield background */}
+    <div className="min-h-screen w-screen relative overflow-hidden flex items-center justify-center px-4 sm:px-6" style={{ backgroundColor: '#0a0a0a' }}>
       <Starfield
-        starColor="rgba(255,255,255,0.6)"
+        starColor="rgba(255,153,0,0.8)"
         bgColor="rgba(10,10,10,1)"
         speed={0.6}
         quantity={350}
-        mouseAdjust
         opacity={1}
       />
 
@@ -72,7 +70,6 @@ export default function LoginPage() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="relative group">
-            {/* Traveling light beams */}
             <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
               {(['top','right','bottom','left'] as const).map((side, i) => (
                 <motion.div
@@ -88,107 +85,35 @@ export default function LoginPage() {
                     [side === 'top' ? 'left' : side === 'right' ? 'top' : side === 'bottom' ? 'right' : 'bottom']: ["-50%", "100%"],
                     opacity: [0.3, 0.7, 0.3],
                   }}
-                  transition={{
-                    duration: 2.5,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                    delay: i * 0.6,
-                  }}
+                  transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 1, delay: i * 0.6 }}
                 />
               ))}
             </div>
 
-            {/* Glass card */}
             <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.05] shadow-2xl overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, white 0.5px, transparent 0.5px), linear-gradient(45deg, white 0.5px, transparent 0.5px)`,
-                  backgroundSize: '30px 30px',
-                }}
-              />
+              <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(135deg, white 0.5px, transparent 0.5px), linear-gradient(45deg, white 0.5px, transparent 0.5px)`, backgroundSize: '30px 30px' }} />
 
-              {/* Header */}
               <div className="text-center space-y-1 mb-5">
-                <motion.div
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", duration: 0.8 }}
-                  className="mx-auto w-10 h-10 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden"
-                >
-                  <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">S</span>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
-                </motion.div>
-                <motion.h1
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
-                >
+                <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
                   Welcome Back
                 </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-white/60 text-xs"
-                >
-                  Sign in to continue to StyleMe
-                </motion.p>
               </div>
 
-              {/* Form */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setIsLoading(true);
-                  setTimeout(() => setIsLoading(false), 2000);
-                }}
-                className="space-y-4"
-              >
+              <form onSubmit={(e) => { e.preventDefault(); setIsLoading(true); setTimeout(() => setIsLoading(false), 2000); }} className="space-y-4">
                 <div className="space-y-3">
-                  <motion.div
-                    className={`relative ${focusedInput === 'email' ? 'z-10' : ''}`}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
+                  <motion.div className={`relative ${focusedInput === 'email' ? 'z-10' : ''}`} whileHover={{ scale: 1.01 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Mail className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'email' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type="email"
-                        placeholder="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setFocusedInput('email')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10"
-                      />
+                      <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={() => setFocusedInput('email')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10" />
                     </div>
                   </motion.div>
 
-                  <motion.div
-                    className={`relative ${focusedInput === 'password' ? 'z-10' : ''}`}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
+                  <motion.div className={`relative ${focusedInput === 'password' ? 'z-10' : ''}`} whileHover={{ scale: 1.01 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'password' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setFocusedInput('password')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10"
-                      />
+                      <Input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onFocus={() => setFocusedInput('password')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10" />
                       <div onClick={() => setShowPassword(!showPassword)} className="absolute right-3 cursor-pointer">
-                        {showPassword ? (
-                          <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        ) : (
-                          <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        )}
+                        {showPassword ? <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" /> : <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />}
                       </div>
                     </div>
                   </motion.div>
@@ -197,22 +122,10 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center space-x-2">
                     <div className="relative">
-                      <input
-                        id="remember-me"
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={() => setRememberMe(!rememberMe)}
-                        className="appearance-none h-4 w-4 rounded border border-white/20 bg-white/5 checked:bg-white checked:border-white focus:outline-none focus:ring-1 focus:ring-white/30 transition-all duration-200"
-                      />
+                      <input id="remember-me" type="checkbox" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} className="appearance-none h-4 w-4 rounded border border-white/20 bg-white/5 checked:bg-white checked:border-white focus:outline-none focus:ring-1 focus:ring-white/30 transition-all duration-200" />
                       {rememberMe && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="absolute inset-0 flex items-center justify-center text-black pointer-events-none"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
+                        <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="absolute inset-0 flex items-center justify-center text-black pointer-events-none">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                         </motion.div>
                       )}
                     </div>
@@ -221,13 +134,7 @@ export default function LoginPage() {
                   <Link href="/forgot-password" className="text-xs text-white/60 hover:text-white transition-colors duration-200">Forgot password?</Link>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full relative group/button mt-5"
-                >
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading} className="w-full relative group/button mt-5">
                   <div className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300" style={{ backgroundColor: 'rgba(255,153,0,0.3)' }} />
                   <div className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ff9900' }}>
                     <AnimatePresence mode="wait">
