@@ -53,6 +53,7 @@ export default function LoginPage() {
         bgColor="rgba(10,10,10,1)"
         speed={0.6}
         quantity={350}
+        mouseAdjust
         opacity={1}
       />
 
@@ -95,7 +96,7 @@ export default function LoginPage() {
 
               <div className="text-center space-y-1 mb-5">
                 <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
-                  Welcome Back
+                  Bon retour
                 </motion.h1>
               </div>
 
@@ -104,14 +105,14 @@ export default function LoginPage() {
                   <motion.div className={`relative ${focusedInput === 'email' ? 'z-10' : ''}`} whileHover={{ scale: 1.01 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Mail className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'email' ? 'text-white' : 'text-white/40'}`} />
-                      <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={() => setFocusedInput('email')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10" />
+                      <Input type="email" placeholder="Adresse e-mail" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={() => setFocusedInput('email')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10" />
                     </div>
                   </motion.div>
 
                   <motion.div className={`relative ${focusedInput === 'password' ? 'z-10' : ''}`} whileHover={{ scale: 1.01 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'password' ? 'text-white' : 'text-white/40'}`} />
-                      <Input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onFocus={() => setFocusedInput('password')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10" />
+                      <Input type={showPassword ? 'text' : 'password'} placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} onFocus={() => setFocusedInput('password')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10" />
                       <div onClick={() => setShowPassword(!showPassword)} className="absolute right-3 cursor-pointer">
                         {showPassword ? <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" /> : <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />}
                       </div>
@@ -129,9 +130,9 @@ export default function LoginPage() {
                         </motion.div>
                       )}
                     </div>
-                    <label htmlFor="remember-me" className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200">Remember me</label>
+                    <label htmlFor="remember-me" className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200">Se souvenir de moi</label>
                   </div>
-                  <Link href="/forgot-password" className="text-xs text-white/60 hover:text-white transition-colors duration-200">Forgot password?</Link>
+                  <Link href="/forgot-password" className="text-xs text-white/60 hover:text-white transition-colors duration-200">Mot de passe oublié ?</Link>
                 </div>
 
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading} className="w-full relative group/button mt-5">
@@ -144,7 +145,7 @@ export default function LoginPage() {
                         </motion.div>
                       ) : (
                         <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1 text-sm font-medium">
-                          Sign In <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform duration-300" />
+                          Se connecter <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform duration-300" />
                         </motion.span>
                       )}
                     </AnimatePresence>
@@ -153,21 +154,21 @@ export default function LoginPage() {
 
                 <div className="relative mt-2 mb-5 flex items-center">
                   <div className="flex-grow border-t border-white/5" />
-                  <motion.span className="mx-3 text-xs text-white/40" animate={{ opacity: [0.7, 0.9, 0.7] }} transition={{ duration: 3, repeat: Infinity }}>or</motion.span>
+                  <motion.span className="mx-3 text-xs text-white/40" animate={{ opacity: [0.7, 0.9, 0.7] }} transition={{ duration: 3, repeat: Infinity }}>ou</motion.span>
                   <div className="flex-grow border-t border-white/5" />
                 </div>
 
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="button" className="w-full relative group/google">
                   <div className="relative overflow-hidden bg-white/5 text-white font-medium h-10 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2">
                     <div className="w-4 h-4 flex items-center justify-center text-white/80">G</div>
-                    <span className="text-white/80 group-hover/google:text-white transition-colors text-xs">Sign in with Google</span>
+                    <span className="text-white/80 group-hover/google:text-white transition-colors text-xs">Se connecter avec Google</span>
                   </div>
                 </motion.button>
 
                 <motion.p className="text-center text-xs text-white/60 mt-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                  Don&apos;t have an account?{' '}
+                  Pas encore de compte ?{' '}
                   <Link href="/signup" className="relative inline-block group/signup">
-                    <span className="relative z-10 text-white group-hover/signup:text-white/70 transition-colors duration-300 font-medium">Sign up</span>
+                    <span className="relative z-10 text-white group-hover/signup:text-white/70 transition-colors duration-300 font-medium">S&apos;inscrire</span>
                     <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signup:w-full transition-all duration-300" />
                   </Link>
                 </motion.p>
