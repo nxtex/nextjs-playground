@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Mail, Lock, Eye, EyeClosed, ArrowRight, User, Calendar } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { Starfield } from '@/components/Starfield';
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
@@ -49,35 +50,16 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-black relative overflow-hidden flex items-center justify-center py-10">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#ff9900]/40 via-[#cc7a00]/50 to-black" />
-
-      {/* Noise texture */}
-      <div
-        className="absolute inset-0 opacity-[0.03] mix-blend-soft-light"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundSize: '200px 200px',
-        }}
+    <div className="min-h-screen w-screen relative overflow-hidden flex items-center justify-center py-10" style={{ backgroundColor: '#0a0a0a' }}>
+      {/* Starfield background */}
+      <Starfield
+        starColor="rgba(255,255,255,0.6)"
+        bgColor="rgba(10,10,10,1)"
+        speed={0.6}
+        quantity={350}
+        mouseAdjust
+        opacity={1}
       />
-
-      {/* Glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] blur-[80px]" style={{ backgroundColor: 'rgba(255,153,0,0.20)' }} />
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full blur-[60px]"
-        style={{ backgroundColor: 'rgba(255,153,0,0.20)' }}
-        animate={{ opacity: [0.15, 0.3, 0.15], scale: [0.98, 1.02, 0.98] }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
-      />
-      <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vh] h-[90vh] rounded-t-full blur-[60px]"
-        style={{ backgroundColor: 'rgba(255,153,0,0.20)' }}
-        animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
-        transition={{ duration: 6, repeat: Infinity, repeatType: "mirror", delay: 1 }}
-      />
-      <div className="absolute left-1/4 top-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse opacity-40" />
-      <div className="absolute right-1/4 bottom-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse delay-1000 opacity-40" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -121,8 +103,7 @@ export default function SignupPage() {
             </div>
 
             {/* Glass card */}
-            <div className="relative bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.05] shadow-2xl overflow-hidden">
-              {/* Card grid pattern */}
+            <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.05] shadow-2xl overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
@@ -133,6 +114,15 @@ export default function SignupPage() {
 
               {/* Header */}
               <div className="text-center space-y-1 mb-5">
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", duration: 0.8 }}
+                  className="mx-auto w-10 h-10 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden"
+                >
+                  <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">S</span>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
+                </motion.div>
                 <motion.h1
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -141,6 +131,14 @@ export default function SignupPage() {
                 >
                   Create Account
                 </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-white/60 text-xs"
+                >
+                  Join StyleMe today
+                </motion.p>
               </div>
 
               {/* Form */}
@@ -153,8 +151,6 @@ export default function SignupPage() {
                 className="space-y-4"
               >
                 <div className="space-y-3">
-
-                  {/* Full Name */}
                   <motion.div
                     className={`relative ${focusedInput === 'name' ? 'z-10' : ''}`}
                     whileHover={{ scale: 1.01 }}
@@ -162,19 +158,10 @@ export default function SignupPage() {
                   >
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <User className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'name' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type="text"
-                        placeholder="Full name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onFocus={() => setFocusedInput('name')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10"
-                      />
+                      <Input type="text" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} onFocus={() => setFocusedInput('name')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10" />
                     </div>
                   </motion.div>
 
-                  {/* Email */}
                   <motion.div
                     className={`relative ${focusedInput === 'email' ? 'z-10' : ''}`}
                     whileHover={{ scale: 1.01 }}
@@ -182,19 +169,10 @@ export default function SignupPage() {
                   >
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Mail className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'email' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type="email"
-                        placeholder="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onFocus={() => setFocusedInput('email')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10"
-                      />
+                      <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={() => setFocusedInput('email')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10" />
                     </div>
                   </motion.div>
 
-                  {/* Date of Birth */}
                   <motion.div
                     className={`relative ${focusedInput === 'dob' ? 'z-10' : ''}`}
                     whileHover={{ scale: 1.01 }}
@@ -202,18 +180,10 @@ export default function SignupPage() {
                   >
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Calendar className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'dob' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type="date"
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                        onFocus={() => setFocusedInput('dob')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10 [color-scheme:dark]"
-                      />
+                      <Input type="date" value={dob} onChange={(e) => setDob(e.target.value)} onFocus={() => setFocusedInput('dob')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-3 focus:bg-white/10 [color-scheme:dark]" />
                     </div>
                   </motion.div>
 
-                  {/* Password */}
                   <motion.div
                     className={`relative ${focusedInput === 'password' ? 'z-10' : ''}`}
                     whileHover={{ scale: 1.01 }}
@@ -221,26 +191,13 @@ export default function SignupPage() {
                   >
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'password' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setFocusedInput('password')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10"
-                      />
+                      <Input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onFocus={() => setFocusedInput('password')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10" />
                       <div onClick={() => setShowPassword(!showPassword)} className="absolute right-3 cursor-pointer">
-                        {showPassword ? (
-                          <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        ) : (
-                          <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        )}
+                        {showPassword ? <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" /> : <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />}
                       </div>
                     </div>
                   </motion.div>
 
-                  {/* Confirm Password */}
                   <motion.div
                     className={`relative ${focusedInput === 'confirmPassword' ? 'z-10' : ''}`}
                     whileHover={{ scale: 1.01 }}
@@ -248,35 +205,15 @@ export default function SignupPage() {
                   >
                     <div className="relative flex items-center overflow-hidden rounded-lg">
                       <Lock className={`absolute left-3 w-4 h-4 transition-all duration-300 ${focusedInput === 'confirmPassword' ? 'text-white' : 'text-white/40'}`} />
-                      <Input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirm password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        onFocus={() => setFocusedInput('confirmPassword')}
-                        onBlur={() => setFocusedInput(null)}
-                        className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10"
-                      />
+                      <Input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onFocus={() => setFocusedInput('confirmPassword')} onBlur={() => setFocusedInput(null)} className="w-full bg-white/5 border-transparent focus:border-white/20 text-white placeholder:text-white/30 h-10 pl-10 pr-10 focus:bg-white/10" />
                       <div onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 cursor-pointer">
-                        {showConfirmPassword ? (
-                          <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        ) : (
-                          <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />
-                        )}
+                        {showConfirmPassword ? <Eye className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" /> : <EyeClosed className="w-4 h-4 text-white/40 hover:text-white transition-colors duration-300" />}
                       </div>
                     </div>
                   </motion.div>
-
                 </div>
 
-                {/* Sign up button */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full relative group/button mt-2"
-                >
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading} className="w-full relative group/button mt-2">
                   <div className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300" style={{ backgroundColor: 'rgba(255,153,0,0.3)' }} />
                   <div className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ff9900' }}>
                     <AnimatePresence mode="wait">
@@ -286,47 +223,27 @@ export default function SignupPage() {
                         </motion.div>
                       ) : (
                         <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1 text-sm font-medium">
-                          Create Account
-                          <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform duration-300" />
+                          Create Account <ArrowRight className="w-3 h-3 group-hover/button:translate-x-1 transition-transform duration-300" />
                         </motion.span>
                       )}
                     </AnimatePresence>
                   </div>
                 </motion.button>
 
-                {/* Divider */}
                 <div className="relative mt-2 mb-5 flex items-center">
                   <div className="flex-grow border-t border-white/5" />
-                  <motion.span
-                    className="mx-3 text-xs text-white/40"
-                    animate={{ opacity: [0.7, 0.9, 0.7] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  >
-                    or
-                  </motion.span>
+                  <motion.span className="mx-3 text-xs text-white/40" animate={{ opacity: [0.7, 0.9, 0.7] }} transition={{ duration: 3, repeat: Infinity }}>or</motion.span>
                   <div className="flex-grow border-t border-white/5" />
                 </div>
 
-                {/* Google */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  className="w-full relative group/google"
-                >
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="button" className="w-full relative group/google">
                   <div className="relative overflow-hidden bg-white/5 text-white font-medium h-10 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2">
                     <div className="w-4 h-4 flex items-center justify-center text-white/80">G</div>
                     <span className="text-white/80 group-hover/google:text-white transition-colors text-xs">Sign up with Google</span>
                   </div>
                 </motion.button>
 
-                {/* Sign in link */}
-                <motion.p
-                  className="text-center text-xs text-white/60 mt-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
+                <motion.p className="text-center text-xs text-white/60 mt-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                   Already have an account?{' '}
                   <Link href="/login" className="relative inline-block group/login">
                     <span className="relative z-10 text-white group-hover/login:text-white/70 transition-colors duration-300 font-medium">Sign in</span>
