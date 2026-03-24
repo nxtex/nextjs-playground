@@ -74,16 +74,20 @@ export default function SignupPage() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="relative group">
+            {/* Outer glow ring */}
+            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-white/15 via-white/5 to-white/10 blur-sm" />
+
+            {/* Traveling light beams */}
             <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
               {(['top','right','bottom','left'] as const).map((side, i) => (
                 <motion.div
                   key={side}
                   className={cn(
                     "absolute bg-gradient-to-r from-transparent via-white to-transparent opacity-70",
-                    side === 'top' && "top-0 left-0 h-[3px] w-[50%]",
-                    side === 'right' && "top-0 right-0 h-[50%] w-[3px] bg-gradient-to-b",
-                    side === 'bottom' && "bottom-0 right-0 h-[3px] w-[50%]",
-                    side === 'left' && "bottom-0 left-0 h-[50%] w-[3px] bg-gradient-to-b"
+                    side === 'top' && "top-0 left-0 h-[2px] w-[50%]",
+                    side === 'right' && "top-0 right-0 h-[50%] w-[2px] bg-gradient-to-b",
+                    side === 'bottom' && "bottom-0 right-0 h-[2px] w-[50%]",
+                    side === 'left' && "bottom-0 left-0 h-[50%] w-[2px] bg-gradient-to-b"
                   )}
                   animate={{
                     [side === 'top' ? 'left' : side === 'right' ? 'top' : side === 'bottom' ? 'right' : 'bottom']: ["-50%", "100%"],
@@ -94,8 +98,21 @@ export default function SignupPage() {
               ))}
             </div>
 
-            <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.05] shadow-2xl overflow-hidden">
-              <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(135deg, white 0.5px, transparent 0.5px), linear-gradient(45deg, white 0.5px, transparent 0.5px)`, backgroundSize: '30px 30px' }} />
+            {/* Glass card */}
+            <div
+              className="relative rounded-2xl p-6 shadow-2xl overflow-hidden"
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                backdropFilter: 'blur(32px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
+              }}
+            >
+              {/* Inner top highlight */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              {/* Inner bottom shadow */}
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
               <div className="text-center space-y-1 mb-5">
                 <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
