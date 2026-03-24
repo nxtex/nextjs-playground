@@ -1,10 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Starfield } from '@/components/Starfield';
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black">
-      <div className="text-center space-y-4">
+    <main className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
+      {/* Starfield background */}
+      <Starfield
+        starColor="rgba(255,200,100,1)"
+        bgColor="rgba(0,0,0,1)"
+        speed={1.5}
+        quantity={512}
+        mouseAdjust
+      />
+
+      {/* Content */}
+      <div className="relative z-10 text-center space-y-4">
         <div className="flex justify-center">
           <Image
             src="/logo.png"
