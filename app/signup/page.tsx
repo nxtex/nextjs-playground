@@ -75,7 +75,7 @@ export default function SignupPage() {
         >
           <div className="relative group">
             {/* Outer glow ring */}
-            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-white/15 via-white/5 to-white/10 blur-sm" />
+            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-black/15 via-black/5 to-black/10 blur-sm" />
 
             {/* Traveling light beams */}
             <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
@@ -102,16 +102,14 @@ export default function SignupPage() {
             <div
               className="relative rounded-2xl p-6 shadow-2xl overflow-hidden"
               style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                backdropFilter: 'blur(32px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-                border: '1px solid rgba(255, 255, 255, 0.10)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
+                background: 'rgba(0, 0, 0, 0.01)',
+                backdropFilter: 'blur(6px) saturate(20%)',
+                WebkitBackdropFilter: 'blur(6px) saturate(20%)',
+                border: '1px solid rgba(0, 0, 0, 0.01)',
+                boxShadow: 'rgba(0,0,0,0.6) 0px 8px 32px, rgba(0,0,0,0.01) 0px 1px 0px inset',
               }}
             >
-              {/* Inner top highlight */}
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              {/* Inner bottom shadow */}
               <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
               <div className="text-center space-y-1 mb-5">
