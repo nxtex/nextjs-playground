@@ -6,20 +6,20 @@ const BUBBLE_COUNT = 128;
 
 const SECTIONS = [
   {
-    title: 'Produits',
-    links: ['Carte de crédit', 'Compte épargne', 'Assurance vie', 'Prêt immobilier', 'Investissement'],
+    title: 'Navigation',
+    links: ['Accueil', 'Paiement', 'Connexion', 'Inscription', 'Tableau de bord'],
   },
   {
-    title: 'Services',
-    links: ['Virement', 'Paiement en ligne', 'Mobile banking', 'Support client'],
+    title: 'Légal',
+    links: ["Conditions d'utilisation", 'Mentions légales', 'Cookies', 'Licences'],
   },
   {
-    title: 'Ressources',
-    links: ['Documentation', 'API', 'Statut', 'Changelog', 'Blog', 'FAQ'],
+    title: 'Confidentialité',
+    links: ['Politique de confidentialité', 'Données personnelles', 'RGPD', 'Sécurité'],
   },
   {
-    title: 'Entreprise',
-    links: ['À propos', 'Carrières', 'Presse', 'Partenaires'],
+    title: 'Support',
+    links: ['Aide', 'Contact', 'FAQ', 'Signaler un problème'],
   },
 ];
 
@@ -163,7 +163,7 @@ export default function BubbleFooter() {
             >
               💳
             </a>
-            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>©2025 NxPay</p>
+            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>© 2026 NxPay — Tous droits réservés</p>
           </div>
         </div>
       </footer>
