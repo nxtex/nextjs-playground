@@ -1,18 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Starfield } from '@/components/Starfield';
 
 export default function Home() {
   return (
     <main className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
-      <Starfield
-        starColor="rgba(255,200,100,1)"
-        bgColor="rgba(0,0,0,1)"
-        speed={1.5}
-        quantity={512}
-        mouseAdjust
-      />
-
       <div className="relative z-10 text-center space-y-4 px-4">
         <div className="flex justify-center">
           <Image
@@ -25,12 +16,20 @@ export default function Home() {
           />
         </div>
         <p className="text-white/60">Un espace pour tester des choses</p>
-        <Link
-          href="/login"
-          className="inline-block mt-4 px-6 py-2 bg-[#ff9900] text-black rounded-lg font-medium hover:bg-[#ff9900]/90 transition-colors"
-        >
-          Se connecter →
-        </Link>
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <Link
+            href="/login"
+            className="inline-block px-6 py-2 bg-[#ff9900] text-black rounded-lg font-medium hover:bg-[#ff9900]/90 transition-colors"
+          >
+            Se connecter →
+          </Link>
+          <Link
+            href="/signup"
+            className="inline-block px-6 py-2 bg-white/5 text-white border border-white/10 rounded-lg font-medium hover:bg-white/10 hover:border-white/20 transition-colors"
+          >
+            S&apos;inscrire
+          </Link>
+        </div>
       </div>
     </main>
   );
