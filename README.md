@@ -1,2 +1,2 @@
-# nextjs-playground
+# monbedo
 A Next.js playground for testing things
