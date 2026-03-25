@@ -73,7 +73,7 @@ export default function PaymentCard() {
   const displayExpiry = expiry || '01/23';
   const displayCvv    = cvv || '985';
 
-  /* tilt ±5° */
+  /* tilt ±5° — only applied to the form box */
   const mouseX  = useMotionValue(0);
   const mouseY  = useMotionValue(0);
   const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
@@ -120,204 +120,221 @@ export default function PaymentCard() {
         opacity={1}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="w-full max-w-sm relative z-10 flex flex-col gap-6"
-        style={{ perspective: 1500 }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        {/* ── Credit card — fully independent block ── */}
-        <motion.div style={{ rotateX, rotateY }}>
-          <div
-            onClick={() => setFlipped(f => !f)}
-            className="relative w-full cursor-pointer"
-            style={{
-              transformStyle: 'preserve-3d',
-              transition: 'transform 0.6s',
-              transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              height: '190px',
-              filter: 'drop-shadow(0 20px 48px rgba(0,0,0,0.8))',
-            }}
-          >
-            {/* FRONT */}
-            <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
-              <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
-                style={{ width: '100%', borderRadius: '18px' }}>
-                <defs>
-                  <pattern id="cardImg" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="259">
-                    <image href="/card.png" x="0" y="0" width="750" height="259" preserveAspectRatio="xMidYMid slice" />
-                  </pattern>
-                  <linearGradient id="imgOverlay" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#000" stopOpacity="0.15" />
-                    <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
-                  </linearGradient>
-                  <clipPath id="cardShape">
-                    <rect width="750" height="471" rx="40" />
-                  </clipPath>
-                </defs>
-                <rect width="750" height="471" rx="40" fill="#111" />
-                <rect x="0" y="0" width="750" height="259" fill="url(#cardImg)" clipPath="url(#cardShape)" />
-                <rect x="0" y="0" width="750" height="259" fill="url(#imgOverlay)" clipPath="url(#cardShape)" />
-                <path fill="#ff9900" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
-                <rect x="65" y="56" width="105" height="72" rx="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
-                <rect x="65" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
-                <rect x="168.5" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
-                <rect x="83" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-                <rect x="83" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-                <rect x="143" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-                <rect x="143" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-                <text x="65" y="245" fill="white" fillOpacity="0.55" fontSize="22" fontFamily="'Source Code Pro',monospace">numéro de carte</text>
-                <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{displayNumber}</text>
-                <text x="54" y="385" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">titulaire</text>
-                <text x="54" y="422" fill="white" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayName}</text>
-                <text x="480" y="384" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">expiration</text>
-                <text x="480" y="410" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">VALIDE</text>
-                <text x="480" y="428" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">JUSQU&apos;AU</text>
-                <polygon fill="white" points="554.5,416 540.4,409 540.4,423" />
-                <text x="574" y="428" fill="white" fontSize="32" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayExpiry}</text>
-              </svg>
-            </div>
+      <div className="w-full max-w-sm relative z-10 flex flex-col gap-6">
 
-            {/* BACK — scaleX(-1) on SVG un-mirrors the content */}
-            <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-              <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
-                style={{ width: '100%', borderRadius: '18px', transform: 'scaleX(-1)' }}>
-                <defs>
-                  <pattern id="cardImgBack" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="471">
-                    <image href="/card.png" x="0" y="0" width="750" height="471" preserveAspectRatio="xMidYMid slice" />
-                  </pattern>
-                  <clipPath id="cardShapeBack">
-                    <rect width="750" height="471" rx="40" />
-                  </clipPath>
-                </defs>
+        {/* ──────────────────────────────────────────────────
+             CARTE DE CRÉDIT — bloc 100% indépendant, zéro tilt
+        ────────────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div style={{ perspective: '800px' }}>
+            <div
+              onClick={() => setFlipped(f => !f)}
+              className="relative w-full cursor-pointer"
+              style={{
+                transformStyle: 'preserve-3d',
+                transition: 'transform 0.6s',
+                transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                height: '190px',
+              }}
+            >
+              {/* FRONT */}
+              <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+                <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+                  <defs>
+                    <pattern id="cardImg" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="259">
+                      <image href="/card.png" x="0" y="0" width="750" height="259" preserveAspectRatio="xMidYMid slice" />
+                    </pattern>
+                    <linearGradient id="imgOverlay" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#000" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
+                    </linearGradient>
+                    <clipPath id="cardShape">
+                      <rect width="750" height="471" rx="40" />
+                    </clipPath>
+                  </defs>
+                  <rect width="750" height="471" rx="40" fill="#111" />
+                  <rect x="0" y="0" width="750" height="259" fill="url(#cardImg)" clipPath="url(#cardShape)" />
+                  <rect x="0" y="0" width="750" height="259" fill="url(#imgOverlay)" clipPath="url(#cardShape)" />
+                  <path fill="#ff9900" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
+                  <rect x="65" y="56" width="105" height="72" rx="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+                  <rect x="65" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="168.5" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="83" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="83" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="143" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="143" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <text x="65" y="245" fill="white" fillOpacity="0.55" fontSize="22" fontFamily="'Source Code Pro',monospace">numéro de carte</text>
+                  <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{displayNumber}</text>
+                  <text x="54" y="385" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">titulaire</text>
+                  <text x="54" y="422" fill="white" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayName}</text>
+                  <text x="480" y="384" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">expiration</text>
+                  <text x="480" y="410" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">VALIDE</text>
+                  <text x="480" y="428" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">JUSQU&apos;AU</text>
+                  <polygon fill="white" points="554.5,416 540.4,409 540.4,423" />
+                  <text x="574" y="428" fill="white" fontSize="32" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayExpiry}</text>
+                </svg>
+              </div>
 
-                {/* base orange */}
-                <rect width="750" height="471" rx="40" fill="#ff9900" />
-                {/* card.png glassy overlay */}
-                <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
-                {/* white glassy sheen */}
-                <rect width="750" height="471" fill="rgba(255,255,255,0.06)" clipPath="url(#cardShapeBack)" />
-                {/* magnetic strip */}
-                <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.72)" />
-                {/* signature strip */}
-                <rect x="42.9" y="184.6" width="565" height="64.5" rx="4"
-                  fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
-                <rect x="42.9" y="198.6" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
-                <rect x="42.9" y="216" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
-                <rect x="42.9" y="233" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
-                {/* CVV box */}
-                <rect x="618" y="184.6" width="92" height="64.5" rx="4"
-                  fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-
-                {/* Text group — flipped back with translate+scale so text reads correctly */}
-                <g transform="translate(750,0) scale(-1,1)">
-                  <text x="664" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="700" textAnchor="middle">{displayCvv}</text>
-                  <text x="232" y="280" fill="rgba(255,255,255,0.75)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
-                  <text x="59" y="232" fill="rgba(0,0,0,0.5)" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{name || 'Jean Dupont'}</text>
-                </g>
-
-                {/* decorative lines bottom */}
-                <rect x="42.9" y="372" width="375" height="12" rx="3" fill="rgba(255,255,255,0.15)"/>
-                <rect x="42.9" y="398" width="420" height="12" rx="3" fill="rgba(255,255,255,0.15)"/>
-              </svg>
+              {/* BACK — identique au commit 09a50f6 */}
+              <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+                  <defs>
+                    <pattern id="cardImgBack" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="471">
+                      <image href="/card.png" x="0" y="0" width="750" height="471" preserveAspectRatio="xMidYMid slice" />
+                    </pattern>
+                    <clipPath id="cardShapeBack">
+                      <rect width="750" height="471" rx="40" />
+                    </clipPath>
+                  </defs>
+                  <rect width="750" height="471" rx="40" fill="#ff9900" />
+                  <rect width="750" height="471" rx="40" fill="rgba(255,255,255,0.08)" clipPath="url(#cardShapeBack)" />
+                  <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
+                  <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.75)" />
+                  <rect x="42.9" y="184.6" width="565" height="64.5" rx="4"
+                    fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+                  <rect x="42.9" y="198.6" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
+                  <rect x="42.9" y="224.5" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
+                  <rect x="618" y="184.6" width="90" height="64.5" rx="4"
+                    fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
+                  <text x="630" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="600">{displayCvv}</text>
+                  <text x="518" y="280" fill="rgba(255,255,255,0.7)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
+                  <rect x="58" y="378" width="375" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
+                  <rect x="58" y="405" width="421" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
+                  <text x="59" y="230" fill="rgba(0,0,0,0.55)" fontSize="30" fontFamily="'Rock Salt',cursive">{name || 'Jean Dupont'}</text>
+                </svg>
+              </div>
             </div>
           </div>
         </motion.div>
 
-        {/* ── Glass box — completely separate, below the card ── */}
-        <motion.div className="relative group" style={{ rotateX, rotateY }}>
-          <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-black/15 via-black/5 to-black/10 blur-sm" />
-          <CardBorderGlow />
-          <div
-            className="relative rounded-2xl p-6 shadow-2xl"
-            style={{
-              background: 'rgba(0,0,0,0.01)',
-              backdropFilter: 'blur(6px) saturate(20%)',
-              WebkitBackdropFilter: 'blur(6px) saturate(20%)',
-              border: '1px solid rgba(255,255,255,0.06)',
-              boxShadow: 'rgba(0,0,0,0.6) 0px 8px 32px, rgba(255,255,255,0.03) 0px 1px 0px inset',
-            }}
+        {/* ──────────────────────────────────────────────────
+             GLASS BOX — bloc 100% indépendant, tilt uniquement ici
+        ────────────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          style={{ perspective: 1500 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
+          <motion.div
+            className="relative group"
+            style={{ rotateX, rotateY }}
           >
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-black/15 via-black/5 to-black/10 blur-sm" />
+            <CardBorderGlow />
+            <div
+              className="relative rounded-2xl p-6 shadow-2xl overflow-hidden"
+              style={{
+                background: 'rgba(0,0,0,0.01)',
+                backdropFilter: 'blur(6px) saturate(20%)',
+                WebkitBackdropFilter: 'blur(6px) saturate(20%)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                boxShadow: 'rgba(0,0,0,0.6) 0px 8px 32px, rgba(255,255,255,0.03) 0px 1px 0px inset',
+              }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
-            <div className="text-center mb-5">
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
-              >
-                Informations de paiement
-              </motion.h1>
+              <div className="text-center mb-5">
+                <motion.h1
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
+                >
+                  Informations de paiement
+                </motion.h1>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className={labelCls} htmlFor="cc-name">Nom du titulaire</label>
+                  <input
+                    id="cc-name" type="text" maxLength={20} placeholder="Jean Dupont"
+                    value={name} onChange={e => setName(e.target.value)}
+                    onFocus={() => setFlipped(false)} className={inputCls}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="text-xs text-white/50" htmlFor="cc-number">Numéro de carte</label>
+                    <span
+                      onClick={generateRandom}
+                      className="text-[10px] text-white/50 bg-white/10 px-2 py-0.5 rounded cursor-pointer hover:bg-white/20 transition-colors"
+                    >
+                      générer un numéro
+                    </span>
+                  </div>
+                  <input
+                    id="cc-number" type="text" inputMode="numeric" placeholder="0000 0000 0000 0000"
+                    value={cardNumber} onChange={handleCardNumber}
+                    onFocus={() => setFlipped(false)} className={inputCls}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className={labelCls} htmlFor="cc-expiry">Expiration (mm/aa)</label>
+                    <input
+                      id="cc-expiry" type="text" inputMode="numeric" placeholder="MM/AA"
+                      value={expiry} onChange={handleExpiry}
+                      onFocus={() => setFlipped(false)} className={inputCls}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls} htmlFor="cc-cvv">Code de sécurité</label>
+                    <input
+                      id="cc-cvv" type="text" inputMode="numeric" placeholder="CVV"
+                      value={cvv} onChange={handleCvv}
+                      onFocus={() => setFlipped(true)} onBlur={() => setFlipped(false)}
+                      className={inputCls}
+                    />
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full relative group/button mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <div
+                    className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300"
+                    style={{ backgroundColor: 'rgba(255,153,0,0.3)' }}
+                  />
+                  <div
+                    className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: '#ff9900' }}
+                  >
+                    <AnimatePresence mode="wait">
+                      {isLoading ? (
+                        <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                          <div className="w-4 h-4 border-2 border-black/70 border-t-transparent rounded-full animate-spin" />
+                        </motion.div>
+                      ) : (
+                        <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-semibold tracking-wide">
+                          Payer maintenant
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.button>
+              </form>
             </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className={labelCls} htmlFor="cc-name">Nom du titulaire</label>
-                <input id="cc-name" type="text" maxLength={20} placeholder="Jean Dupont"
-                  value={name} onChange={e => setName(e.target.value)}
-                  onFocus={() => setFlipped(false)} className={inputCls} />
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-xs text-white/50" htmlFor="cc-number">Numéro de carte</label>
-                  <span onClick={generateRandom}
-                    className="text-[10px] text-white/50 bg-white/10 px-2 py-0.5 rounded cursor-pointer hover:bg-white/20 transition-colors">
-                    générer un numéro
-                  </span>
-                </div>
-                <input id="cc-number" type="text" inputMode="numeric" placeholder="0000 0000 0000 0000"
-                  value={cardNumber} onChange={handleCardNumber}
-                  onFocus={() => setFlipped(false)} className={inputCls} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className={labelCls} htmlFor="cc-expiry">Expiration (mm/aa)</label>
-                  <input id="cc-expiry" type="text" inputMode="numeric" placeholder="MM/AA"
-                    value={expiry} onChange={handleExpiry}
-                    onFocus={() => setFlipped(false)} className={inputCls} />
-                </div>
-                <div>
-                  <label className={labelCls} htmlFor="cc-cvv">Code de sécurité</label>
-                  <input id="cc-cvv" type="text" inputMode="numeric" placeholder="CVV"
-                    value={cvv} onChange={handleCvv}
-                    onFocus={() => setFlipped(true)} onBlur={() => setFlipped(false)}
-                    className={inputCls} />
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                type="submit" disabled={isLoading}
-                className="w-full relative group/button mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                <div className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300"
-                  style={{ backgroundColor: 'rgba(255,153,0,0.3)' }} />
-                <div className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: '#ff9900' }}>
-                  <AnimatePresence mode="wait">
-                    {isLoading ? (
-                      <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        <div className="w-4 h-4 border-2 border-black/70 border-t-transparent rounded-full animate-spin" />
-                      </motion.div>
-                    ) : (
-                      <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-semibold tracking-wide">
-                        Payer maintenant
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.button>
-            </form>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+
+      </div>
     </div>
   );
 }
