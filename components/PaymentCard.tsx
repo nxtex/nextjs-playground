@@ -106,99 +106,6 @@ export default function PaymentCard() {
   const inputCls = "w-full bg-white/5 border border-white/10 focus:border-white/20 focus:bg-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-white/30 outline-none transition-all duration-200";
   const labelCls = "block text-xs text-white/50 mb-1.5";
 
-  /* ── Credit card visual (shared between layouts) ── */
-  const creditCard = (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      /* desktop: centred vertically inside the row, full width of its column */
-      className="w-full md:flex md:items-center"
-    >
-      <div style={{ perspective: '800px' }} className="w-full">
-        <div
-          onClick={() => setFlipped(f => !f)}
-          className="relative w-full cursor-pointer"
-          style={{
-            transformStyle: 'preserve-3d',
-            transition: 'transform 0.6s',
-            transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            height: '190px',
-          }}
-        >
-          {/* FRONT */}
-          <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
-            <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
-              style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
-              <defs>
-                <pattern id="cardImg" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="259">
-                  <image href="/card.png" x="0" y="0" width="750" height="259" preserveAspectRatio="xMidYMid slice" />
-                </pattern>
-                <linearGradient id="imgOverlay" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#000" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
-                </linearGradient>
-                <clipPath id="cardShape">
-                  <rect width="750" height="471" rx="40" />
-                </clipPath>
-              </defs>
-              <rect width="750" height="471" rx="40" fill="#111" />
-              <rect x="0" y="0" width="750" height="259" fill="url(#cardImg)" clipPath="url(#cardShape)" />
-              <rect x="0" y="0" width="750" height="259" fill="url(#imgOverlay)" clipPath="url(#cardShape)" />
-              <path fill="#ff9900" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
-              <rect x="65" y="56" width="105" height="72" rx="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
-              <rect x="65" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
-              <rect x="168.5" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
-              <rect x="83" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-              <rect x="83" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-              <rect x="143" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-              <rect x="143" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
-              <text x="65" y="245" fill="white" fillOpacity="0.55" fontSize="22" fontFamily="'Source Code Pro',monospace">numéro de carte</text>
-              <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{displayNumber}</text>
-              <text x="54" y="385" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">titulaire</text>
-              <text x="54" y="422" fill="white" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayName}</text>
-              <text x="480" y="384" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">expiration</text>
-              <text x="480" y="410" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">VALIDE</text>
-              <text x="480" y="428" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">JUSQU&apos;AU</text>
-              <polygon fill="white" points="554.5,416 540.4,409 540.4,423" />
-              <text x="574" y="428" fill="white" fontSize="32" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayExpiry}</text>
-            </svg>
-          </div>
-
-          {/* BACK */}
-          <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-            <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
-              style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
-              <defs>
-                <pattern id="cardImgBack" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="471">
-                  <image href="/card.png" x="0" y="0" width="750" height="471" preserveAspectRatio="xMidYMid slice" />
-                </pattern>
-                <clipPath id="cardShapeBack">
-                  <rect width="750" height="471" rx="40" />
-                </clipPath>
-              </defs>
-              <rect width="750" height="471" rx="40" fill="#ff9900" />
-              <rect width="750" height="471" rx="40" fill="rgba(255,255,255,0.08)" clipPath="url(#cardShapeBack)" />
-              <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
-              <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.75)" />
-              <rect x="42.9" y="184.6" width="565" height="64.5" rx="4"
-                fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-              <rect x="42.9" y="198.6" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
-              <rect x="42.9" y="224.5" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
-              <rect x="618" y="184.6" width="90" height="64.5" rx="4"
-                fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
-              <text x="630" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="600">{displayCvv}</text>
-              <text x="518" y="280" fill="rgba(255,255,255,0.7)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
-              <rect x="58" y="378" width="375" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
-              <rect x="58" y="405" width="421" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
-              <text x="59" y="230" fill="rgba(0,0,0,0.55)" fontSize="30" fontFamily="'Rock Salt',cursive">{name || 'Jean Dupont'}</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-
   return (
     <div
       className="min-h-screen w-screen relative overflow-hidden flex items-center justify-center px-6 py-12"
@@ -215,12 +122,102 @@ export default function PaymentCard() {
 
       {/*
         Layout:
-          mobile  → flex-col   : carte au-dessus, box en-dessous, gap-10
-          desktop → flex-row   : box à gauche | carte à droite, gap-12, alignés verticalement
+          mobile  → flex-col  : carte en haut, box en bas, gap-10
+          desktop → flex-row  : carte à gauche (380px fixe) | box à droite (flex-1), gap-12
       */}
       <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row md:items-center gap-10 md:gap-12">
 
-        {/* ── GLASS BOX (gauche sur desktop, bas sur mobile) ── */}
+        {/* ── CARTE — gauche desktop / haut mobile ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full md:w-[380px] md:shrink-0"
+        >
+          <div style={{ perspective: '800px' }}>
+            <div
+              onClick={() => setFlipped(f => !f)}
+              className="relative w-full cursor-pointer"
+              style={{
+                transformStyle: 'preserve-3d',
+                transition: 'transform 0.6s',
+                transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                height: '190px',
+              }}
+            >
+              {/* FRONT */}
+              <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+                <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+                  <defs>
+                    <pattern id="cardImg" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="259">
+                      <image href="/card.png" x="0" y="0" width="750" height="259" preserveAspectRatio="xMidYMid slice" />
+                    </pattern>
+                    <linearGradient id="imgOverlay" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#000" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
+                    </linearGradient>
+                    <clipPath id="cardShape">
+                      <rect width="750" height="471" rx="40" />
+                    </clipPath>
+                  </defs>
+                  <rect width="750" height="471" rx="40" fill="#111" />
+                  <rect x="0" y="0" width="750" height="259" fill="url(#cardImg)" clipPath="url(#cardShape)" />
+                  <rect x="0" y="0" width="750" height="259" fill="url(#imgOverlay)" clipPath="url(#cardShape)" />
+                  <path fill="#ff9900" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
+                  <rect x="65" y="56" width="105" height="72" rx="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+                  <rect x="65" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="168.5" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="83" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="83" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="143" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="143" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
+                  <text x="65" y="245" fill="white" fillOpacity="0.55" fontSize="22" fontFamily="'Source Code Pro',monospace">numéro de carte</text>
+                  <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{displayNumber}</text>
+                  <text x="54" y="385" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">titulaire</text>
+                  <text x="54" y="422" fill="white" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayName}</text>
+                  <text x="480" y="384" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">expiration</text>
+                  <text x="480" y="410" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">VALIDE</text>
+                  <text x="480" y="428" fill="white" fontSize="13" fontFamily="'Source Code Pro',monospace" fontWeight="300">JUSQU&apos;AU</text>
+                  <polygon fill="white" points="554.5,416 540.4,409 540.4,423" />
+                  <text x="574" y="428" fill="white" fontSize="32" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayExpiry}</text>
+                </svg>
+              </div>
+
+              {/* BACK */}
+              <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: '100%', borderRadius: '18px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+                  <defs>
+                    <pattern id="cardImgBack" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="471">
+                      <image href="/card.png" x="0" y="0" width="750" height="471" preserveAspectRatio="xMidYMid slice" />
+                    </pattern>
+                    <clipPath id="cardShapeBack">
+                      <rect width="750" height="471" rx="40" />
+                    </clipPath>
+                  </defs>
+                  <rect width="750" height="471" rx="40" fill="#ff9900" />
+                  <rect width="750" height="471" rx="40" fill="rgba(255,255,255,0.08)" clipPath="url(#cardShapeBack)" />
+                  <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
+                  <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.75)" />
+                  <rect x="42.9" y="184.6" width="565" height="64.5" rx="4"
+                    fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+                  <rect x="42.9" y="198.6" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
+                  <rect x="42.9" y="224.5" width="565" height="10.5" fill="rgba(255,255,255,0.1)"/>
+                  <rect x="618" y="184.6" width="90" height="64.5" rx="4"
+                    fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
+                  <text x="630" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="600">{displayCvv}</text>
+                  <text x="518" y="280" fill="rgba(255,255,255,0.7)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
+                  <rect x="58" y="378" width="375" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
+                  <rect x="58" y="405" width="421" height="13" rx="3" fill="rgba(255,255,255,0.15)"/>
+                  <text x="59" y="230" fill="rgba(0,0,0,0.55)" fontSize="30" fontFamily="'Rock Salt',cursive">{name || 'Jean Dupont'}</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── GLASS BOX — droite desktop / bas mobile ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -320,11 +317,6 @@ export default function PaymentCard() {
             </div>
           </motion.div>
         </motion.div>
-
-        {/* ── CARTE (droite sur desktop, haut sur mobile) ── */}
-        <div className="w-full md:w-[380px] md:shrink-0 order-first md:order-last">
-          {creditCard}
-        </div>
 
       </div>
     </div>
