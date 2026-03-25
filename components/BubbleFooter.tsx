@@ -66,7 +66,14 @@ export default function BubbleFooter() {
           0%   { bottom: -4rem; }
           100% { bottom: var(--distance, 10rem); }
         }
-        .bubble-footer-bubbles {
+        .bubble-layer {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .bubble-strip {
           position: absolute;
           top: 0; left: 0; right: 0;
           height: 1rem;
@@ -93,31 +100,33 @@ export default function BubbleFooter() {
           position: 'relative',
           zIndex: 1,
           marginTop: '10rem',
-          display: 'flex',
-          flexDirection: 'column',
+          background: '#ff9900',
         }}
       >
-        {/* Bubbles */}
-        <div className="bubble-footer-bubbles">
-          {bubbles.map((b, i) => (
-            <div
-              key={i}
-              className="bubble-footer-bubble"
-              style={{
-                ['--size' as string]:     b.size,
-                ['--distance' as string]: b.distance,
-                ['--position' as string]: b.position,
-                ['--time' as string]:     b.time,
-                ['--delay' as string]:    b.delay,
-              }}
-            />
-          ))}
+        {/* Bubbles — z-index 0, derrière tout */}
+        <div className="bubble-layer">
+          <div className="bubble-strip">
+            {bubbles.map((b, i) => (
+              <div
+                key={i}
+                className="bubble-footer-bubble"
+                style={{
+                  ['--size' as string]:     b.size,
+                  ['--distance' as string]: b.distance,
+                  ['--position' as string]: b.position,
+                  ['--time' as string]:     b.time,
+                  ['--delay' as string]:    b.delay,
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Main content */}
+        {/* Contenu — z-index 1, toujours au-dessus */}
         <div
           style={{
-            background: '#ff9900',
+            position: 'relative',
+            zIndex: 1,
             padding: '2.5rem 2rem 1rem',
             display: 'flex',
             flexDirection: 'column',
