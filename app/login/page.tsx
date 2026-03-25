@@ -71,10 +71,8 @@ export default function LoginPage() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="relative group">
-            {/* Outer glow ring */}
             <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-black/15 via-black/5 to-black/10 blur-sm" />
 
-            {/* Traveling light beams */}
             <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
               {(['top','right','bottom','left'] as const).map((side, i) => (
                 <motion.div
@@ -95,7 +93,6 @@ export default function LoginPage() {
               ))}
             </div>
 
-            {/* Glass card */}
             <div
               className="relative rounded-2xl p-6 shadow-2xl overflow-hidden"
               style={{
@@ -185,6 +182,13 @@ export default function LoginPage() {
                   <Link href="/signup" className="relative inline-block group/signup">
                     <span className="relative z-10 text-white group-hover/signup:text-white/70 transition-colors duration-300 font-medium">S&apos;inscrire</span>
                     <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signup:w-full transition-all duration-300" />
+                  </Link>
+                </motion.p>
+
+                <motion.p className="text-center text-[10px] text-white/25 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
+                  En vous connectant, vous acceptez notre{' '}
+                  <Link href="/politique-de-confidentialite" className="text-white/40 hover:text-white/70 underline underline-offset-2 transition-colors duration-200">
+                    politique de confidentialité
                   </Link>
                 </motion.p>
               </form>
