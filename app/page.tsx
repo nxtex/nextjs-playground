@@ -29,6 +29,12 @@ export default function Home() {
           >
             S&apos;inscrire
           </Link>
+          <Link
+            href="/payment"
+            className="inline-block px-6 py-2 bg-white text-black rounded-lg font-medium hover:bg-white/80 transition-colors"
+          >
+            Paiement 💳
+          </Link>
         </div>
       </div>
     </main>
