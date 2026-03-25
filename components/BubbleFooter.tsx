@@ -163,7 +163,7 @@ export default function BubbleFooter() {
             >
               💳
             </a>
-            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>© 2026 NxPay — Tous droits réservés</p>
+            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>© 2026 monbedo — Tous droits réservés</p>
           </div>
         </div>
       </footer>
