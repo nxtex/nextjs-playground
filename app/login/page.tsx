@@ -6,9 +6,6 @@ import { Mail, Lock, Eye, EyeClosed, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Starfield } from '@/components/Starfield';
 import { Input } from '@/components/ui/Input';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = { title: 'Connexion' };
 
 const BORDER_SIDES = ['top', 'right', 'bottom', 'left'] as const;
 type Side = typeof BORDER_SIDES[number];
