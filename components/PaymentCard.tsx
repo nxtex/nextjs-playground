@@ -172,7 +172,7 @@ export default function PaymentCard() {
                   <rect width="750" height="471" rx="40" fill="#111" />
                   <rect x="0" y="0" width="750" height="259" fill="url(#cardImg)" clipPath="url(#cardShape)" />
                   <rect x="0" y="0" width="750" height="259" fill="url(#imgOverlay)" clipPath="url(#cardShape)" />
-                  <path fill="#ff9900" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
+                  <path fill="#ff9000" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
                   <rect x="65" y="56" width="105" height="72" rx="8" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
                   <rect x="65" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
                   <rect x="168.5" y="70" width="1.5" height="44" fill="rgba(255,255,255,0.4)"/>
@@ -204,7 +204,7 @@ export default function PaymentCard() {
                       <rect width="750" height="471" rx="40" />
                     </clipPath>
                   </defs>
-                  <rect width="750" height="471" rx="40" fill="#ff9900" />
+                  <rect width="750" height="471" rx="40" fill="#ff9000" />
                   <rect width="750" height="471" rx="40" fill="rgba(255,255,255,0.08)" clipPath="url(#cardShapeBack)" />
                   <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
                   <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.75)" />
@@ -307,7 +307,7 @@ export default function PaymentCard() {
                   <div className="absolute inset-0 rounded-lg blur-lg opacity-0 group-hover/button:opacity-70 transition-opacity duration-300"
                     style={{ backgroundColor: 'rgba(255,153,0,0.3)' }} />
                   <div className="relative overflow-hidden text-black font-medium h-10 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: '#ff9900' }}>
+                    style={{ backgroundColor: '#ff9000' }}>
                     <AnimatePresence mode="wait">
                       {isLoading ? (
                         <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
