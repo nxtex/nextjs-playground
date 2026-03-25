@@ -120,7 +120,6 @@ export default function PaymentCard() {
         opacity={1}
       />
 
-      {/* Outer tilt wrapper — applies to both card and box */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -182,16 +181,10 @@ export default function PaymentCard() {
               </svg>
             </div>
 
-            {/* BACK — rotateY(180deg) + scaleX(-1) to un-mirror the SVG content */}
-            <div
-              className="absolute inset-0"
-              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-            >
-              <svg
-                viewBox="0 0 750 471"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ width: '100%', borderRadius: '18px', transform: 'scaleX(-1)' }}
-              >
+            {/* BACK — scaleX(-1) on SVG un-mirrors the content */}
+            <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+              <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg"
+                style={{ width: '100%', borderRadius: '18px', transform: 'scaleX(-1)' }}>
                 <defs>
                   <pattern id="cardImgBack" patternUnits="userSpaceOnUse" x="0" y="0" width="750" height="471">
                     <image href="/card.png" x="0" y="0" width="750" height="471" preserveAspectRatio="xMidYMid slice" />
@@ -203,31 +196,26 @@ export default function PaymentCard() {
 
                 {/* base orange */}
                 <rect width="750" height="471" rx="40" fill="#ff9900" />
-
                 {/* card.png glassy overlay */}
                 <rect x="0" y="0" width="750" height="471" fill="url(#cardImgBack)" fillOpacity="0.12" clipPath="url(#cardShapeBack)" />
-
                 {/* white glassy sheen */}
                 <rect width="750" height="471" fill="rgba(255,255,255,0.06)" clipPath="url(#cardShapeBack)" />
-
                 {/* magnetic strip */}
                 <rect y="61.6" width="750" height="78" fill="rgba(0,0,0,0.72)" />
-
-                {/* signature strip — glassmorphism */}
+                {/* signature strip */}
                 <rect x="42.9" y="184.6" width="565" height="64.5" rx="4"
                   fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
                 <rect x="42.9" y="198.6" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
                 <rect x="42.9" y="216" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
                 <rect x="42.9" y="233" width="565" height="10" fill="rgba(255,255,255,0.08)"/>
-
-                {/* CVV box — glassmorphism */}
+                {/* CVV box */}
                 <rect x="618" y="184.6" width="92" height="64.5" rx="4"
                   fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-                {/* scaleX(-1) mirrors text too so we flip it back inline */}
+
+                {/* Text group — flipped back with translate+scale so text reads correctly */}
                 <g transform="translate(750,0) scale(-1,1)">
-                  <text x="750-630-27" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="700"
-                    textAnchor="middle" x="664">{displayCvv}</text>
-                  <text x="518" y="280" fill="rgba(255,255,255,0.75)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
+                  <text x="664" y="227" fill="#1a1a1a" fontSize="27" fontFamily="'Source Code Pro',monospace" fontWeight="700" textAnchor="middle">{displayCvv}</text>
+                  <text x="232" y="280" fill="rgba(255,255,255,0.75)" fontSize="20" fontFamily="'Source Code Pro',monospace">code de sécurité</text>
                   <text x="59" y="232" fill="rgba(0,0,0,0.5)" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{name || 'Jean Dupont'}</text>
                 </g>
 
@@ -256,7 +244,6 @@ export default function PaymentCard() {
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
-            {/* Title */}
             <div className="text-center mb-5">
               <motion.h1
                 initial={{ opacity: 0, y: 10 }}
@@ -268,15 +255,12 @@ export default function PaymentCard() {
               </motion.h1>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className={labelCls} htmlFor="cc-name">Nom du titulaire</label>
-                <input
-                  id="cc-name" type="text" maxLength={20} placeholder="Jean Dupont"
+                <input id="cc-name" type="text" maxLength={20} placeholder="Jean Dupont"
                   value={name} onChange={e => setName(e.target.value)}
-                  onFocus={() => setFlipped(false)} className={inputCls}
-                />
+                  onFocus={() => setFlipped(false)} className={inputCls} />
               </div>
 
               <div>
@@ -287,30 +271,24 @@ export default function PaymentCard() {
                     générer un numéro
                   </span>
                 </div>
-                <input
-                  id="cc-number" type="text" inputMode="numeric" placeholder="0000 0000 0000 0000"
+                <input id="cc-number" type="text" inputMode="numeric" placeholder="0000 0000 0000 0000"
                   value={cardNumber} onChange={handleCardNumber}
-                  onFocus={() => setFlipped(false)} className={inputCls}
-                />
+                  onFocus={() => setFlipped(false)} className={inputCls} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={labelCls} htmlFor="cc-expiry">Expiration (mm/aa)</label>
-                  <input
-                    id="cc-expiry" type="text" inputMode="numeric" placeholder="MM/AA"
+                  <input id="cc-expiry" type="text" inputMode="numeric" placeholder="MM/AA"
                     value={expiry} onChange={handleExpiry}
-                    onFocus={() => setFlipped(false)} className={inputCls}
-                  />
+                    onFocus={() => setFlipped(false)} className={inputCls} />
                 </div>
                 <div>
                   <label className={labelCls} htmlFor="cc-cvv">Code de sécurité</label>
-                  <input
-                    id="cc-cvv" type="text" inputMode="numeric" placeholder="CVV"
+                  <input id="cc-cvv" type="text" inputMode="numeric" placeholder="CVV"
                     value={cvv} onChange={handleCvv}
                     onFocus={() => setFlipped(true)} onBlur={() => setFlipped(false)}
-                    className={inputCls}
-                  />
+                    className={inputCls} />
                 </div>
               </div>
 
