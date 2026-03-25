@@ -51,6 +51,22 @@ function formatCardNumber(val: string, type: CardType): string {
   return (digits.match(/.{1,4}/g) || []).join(' ');
 }
 
+/**
+ * Masque les chiffres 5 à 12 (index 4–11 dans les digits bruts) avec ●
+ * puis re-formate avec les espaces en groupes de 4.
+ * Ex: "1234 5678 9012 3456" → "1234 ●●●● ●●●● 3456"
+ */
+function maskNumber(formatted: string): string {
+  const chars = formatted.split('');
+  let digitIdx = 0;
+  return chars.map(c => {
+    if (c === ' ') return c;
+    const masked = digitIdx >= 4 && digitIdx <= 11 ? '\u25cf' : c;
+    digitIdx++;
+    return masked;
+  }).join('');
+}
+
 function formatExpiry(val: string): string {
   const d = val.replace(/\D/g, '').slice(0, 4);
   return d.length <= 2 ? d : d.slice(0,2) + '/' + d.slice(2);
@@ -69,6 +85,7 @@ export default function PaymentCard() {
 
   const cardType      = detectCardType(cardNumber);
   const displayNumber = cardNumber || '0123 4567 8910 1112';
+  const maskedNumber  = maskNumber(displayNumber);
   const displayName   = name.toUpperCase() || 'JEAN DUPONT';
   const displayExpiry = expiry || '01/23';
   const displayCvv    = cvv || '985';
@@ -120,11 +137,6 @@ export default function PaymentCard() {
         opacity={1}
       />
 
-      {/*
-        Layout:
-          mobile  → flex-col  : carte en haut, box en bas, gap-10
-          desktop → flex-row  : carte à gauche (380px fixe) | box à droite (flex-1), gap-12
-      */}
       <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row md:items-center gap-10 md:gap-12">
 
         {/* ── CARTE — gauche desktop / haut mobile ── */}
@@ -173,7 +185,8 @@ export default function PaymentCard() {
                   <rect x="143" y="82" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
                   <rect x="143" y="108" width="26" height="1.5" fill="rgba(255,255,255,0.4)"/>
                   <text x="65" y="245" fill="white" fillOpacity="0.55" fontSize="22" fontFamily="'Source Code Pro',monospace">numéro de carte</text>
-                  <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{displayNumber}</text>
+                  {/* maskedNumber : chiffres 5–12 remplacés par ● */}
+                  <text x="65" y="295" fill="white" fontSize="44" fontFamily="'Source Code Pro',monospace" fontWeight="600" letterSpacing="2">{maskedNumber}</text>
                   <text x="54" y="385" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">titulaire</text>
                   <text x="54" y="422" fill="white" fontSize="28" fontFamily="'Source Code Pro',monospace" fontWeight="400">{displayName}</text>
                   <text x="480" y="384" fill="white" fillOpacity="0.55" fontSize="20" fontFamily="'Source Code Pro',monospace">expiration</text>
