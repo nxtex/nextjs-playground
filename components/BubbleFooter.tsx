@@ -44,14 +44,12 @@ export default function BubbleFooter() {
 
   return (
     <>
-      {/* SVG blob filter — hors du flux, position fixed */}
       <svg style={{ position: 'fixed', top: '100vh' }} aria-hidden>
         <defs>
           <filter id="blob">
             <feGaussianBlur in="SourceGraphic" stdDeviation={10} result="blur" />
             <feColorMatrix
-              in="blur"
-              mode="matrix"
+              in="blur" mode="matrix"
               values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
               result="blob"
             />
@@ -93,13 +91,13 @@ export default function BubbleFooter() {
         style={{
           ['--footer-bg' as string]: '#ff9900',
           position: 'relative',
-          minHeight: '12rem',
-          display: 'grid',
           zIndex: 1,
           marginTop: '10rem',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {/* Bubbles row */}
+        {/* Bubbles */}
         <div className="bubble-footer-bubbles">
           {bubbles.map((b, i) => (
             <div
@@ -116,28 +114,32 @@ export default function BubbleFooter() {
           ))}
         </div>
 
-        {/* Content */}
+        {/* Main content */}
         <div
           style={{
-            position: 'relative',
-            zIndex: 2,
             background: '#ff9900',
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            gap: '4rem',
-            padding: '2rem',
+            padding: '2.5rem 2rem 1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
           }}
         >
-          {/* Links grid */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.25rem' }}>
+          {/* 4-col vertical links */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '2rem',
+            }}
+          >
             {SECTIONS.map((section) => (
-              <div key={section.title} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.25rem 0.5rem', margin: '0.25rem 0' }}>
-                <b style={{ color: 'white', marginRight: '0.25rem' }}>{section.title}</b>
+              <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <b style={{ color: 'white', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{section.title}</b>
                 {section.links.map((link) => (
                   <a
                     key={link}
                     href="#"
-                    style={{ color: '#F5F7FA', textDecoration: 'none', fontSize: '0.875rem' }}
+                    style={{ color: '#F5F7FA', textDecoration: 'none', fontSize: '0.8rem', lineHeight: '1.6' }}
                   >
                     {link}
                   </a>
@@ -146,24 +148,11 @@ export default function BubbleFooter() {
             ))}
           </div>
 
-          {/* Logo + copyright */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
-            <a
-              href="#"
-              style={{
-                width: '4rem',
-                height: '4rem',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.5rem',
-              }}
-            >
-              💳
-            </a>
-            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>© 2026 monbedo — Tous droits réservés</p>
+          {/* Copyright */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '1rem' }}>
+            <p style={{ color: '#F5F7FA', margin: 0, fontSize: '0.75rem', textAlign: 'center' }}>
+              © 2026 monbedo — Tous droits réservés
+            </p>
           </div>
         </div>
       </footer>
