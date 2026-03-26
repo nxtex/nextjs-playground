@@ -6,7 +6,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Supprimer les injections plugins sur woocommerce_register_form
+// Supprimer les injections WP Loyalty via woocommerce_register_form
 add_action( 'woocommerce_register_form', function() {
   global $wp_filter;
   if ( ! isset( $wp_filter['woocommerce_register_form'] ) ) return;
@@ -16,9 +16,6 @@ add_action( 'woocommerce_register_form', function() {
       if ( is_array( $fn ) && is_object( $fn[0] ) ) {
         $class = get_class( $fn[0] );
         if ( stripos( $class, 'wlr' ) !== false || stripos( $class, 'wployalty' ) !== false || stripos( $class, 'WPLoyalty' ) !== false ) {
-          unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
-        }
-        if ( method_exists( $fn[0], 'privacy_policy_text' ) && $fn[1] === 'privacy_policy_text' ) {
           unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
         }
       }
@@ -54,6 +51,9 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 0 1rem;
     font-family: 'Inter', Arial, sans-serif;
   }
+
+  /* ── Cacher la privacy policy injectée par WooCommerce ── */
+  .woocommerce-privacy-policy-text { display: none !important; }
 
   /* ── Tabs ───────────────────────────────────────────── */
   .mb-tabs {
@@ -130,7 +130,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     outline: none !important;
     margin-bottom: 0.25rem;
   }
-  /* Padding right pour laisser place à l'œil */
   .mb-password-wrap input[type="password"],
   .mb-password-wrap input[type="text"] {
     padding-right: 42px !important;
@@ -156,9 +155,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     position: relative;
     margin-bottom: 0.25rem;
   }
-  .mb-password-wrap input {
-    margin-bottom: 0 !important;
-  }
+  .mb-password-wrap input { margin-bottom: 0 !important; }
   .mb-eye-btn {
     position: absolute;
     right: 12px;
@@ -177,7 +174,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-eye-btn svg { width: 16px; height: 16px; }
 
   /* ── Force du mot de passe ────────────────────────────── */
-  /* Message "Très faible / Faible / Moyen / Fort" */
   .woocommerce-password-strength {
     background: transparent !important;
     border: none !important;
@@ -189,31 +185,22 @@ do_action( 'woocommerce_before_customer_login_form' );
     margin-bottom: 0.75rem !important;
     text-align: left !important;
   }
-  /* Bad (très faible) */
-  .woocommerce-password-strength.bad {
-    background: rgba(220,53,69,0.15) !important;
-    color: #ff6b7a !important;
-    border: 1px solid rgba(220,53,69,0.3) !important;
-  }
-  /* Short */
+  .woocommerce-password-strength.bad,
   .woocommerce-password-strength.short {
     background: rgba(220,53,69,0.15) !important;
     color: #ff6b7a !important;
     border: 1px solid rgba(220,53,69,0.3) !important;
   }
-  /* Good (moyen) */
   .woocommerce-password-strength.good {
     background: rgba(255,153,0,0.12) !important;
     color: #ff9900 !important;
     border: 1px solid rgba(255,153,0,0.3) !important;
   }
-  /* Strong (fort) */
   .woocommerce-password-strength.strong {
     background: rgba(40,167,69,0.12) !important;
     color: #4caf7d !important;
     border: 1px solid rgba(40,167,69,0.3) !important;
   }
-  /* Hint "Conseil : Le mot de passe devrait..." */
   .woocommerce-password-hint {
     color: rgba(255,255,255,0.3) !important;
     font-size: 0.7rem !important;
@@ -248,7 +235,7 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-points-banner .mb-points-icon { font-size: 1rem; flex-shrink: 0; }
   .mb-points-banner span { color: #ff9900; font-size: 0.78rem; font-weight: 600; line-height: 1.4; }
 
-  /* ── Privacy notice ────────────────────────────────── */
+  /* ── Privacy notice (la nôtre) ───────────────────────── */
   .mb-privacy-notice {
     color: rgba(255,255,255,0.35) !important;
     font-size: 0.72rem !important;
@@ -419,6 +406,7 @@ do_action( 'woocommerce_before_customer_login_form' );
           </button>
         </p>
 
+        <!-- Privacy notice (la nôtre) -->
         <p class="mb-privacy-notice">
           <?php
           printf(
@@ -437,13 +425,10 @@ do_action( 'woocommerce_before_customer_login_form' );
 </div><!-- .mb-login-wrap -->
 
 <?php
-// SVG helper pour l'œil (hidden = œil fermé, visible = œil ouvert)
 function mb_eye_icon_svg( $hidden = true ) {
   if ( $hidden ) {
-    // œil biffé
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
   }
-  // œil ouvert
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
 }
 ?>
@@ -454,12 +439,10 @@ function mbTogglePass(id, btn) {
   if (!inp) return;
   var isHidden = inp.type === 'password';
   inp.type = isHidden ? 'text' : 'password';
-  // Swap SVG icon
   btn.innerHTML = isHidden
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
     : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 }
-
 function mbSwitchTab(tab, el) {
   document.querySelectorAll('.mb-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.mb-tab').forEach(t => t.classList.remove('active'));
