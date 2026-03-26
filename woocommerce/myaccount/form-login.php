@@ -5,12 +5,36 @@
  * @version 9.2.0
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+// Supprimer les injections plugins sur woocommerce_register_form
+add_action( 'woocommerce_register_form', function() {
+  // WP Loyalty — message signup & champ DOB
+  global $wp_filter;
+  if ( isset( $wp_filter['woocommerce_register_form'] ) ) {
+    foreach ( $wp_filter['woocommerce_register_form']->callbacks as $priority => $callbacks ) {
+      foreach ( $callbacks as $key => $callback ) {
+        $fn = $callback['function'];
+        // Supprimer toutes les callbacks WP Loyalty (wlr)
+        if ( is_array( $fn ) && is_object( $fn[0] ) ) {
+          $class = get_class( $fn[0] );
+          if ( stripos( $class, 'wlr' ) !== false || stripos( $class, 'wployalty' ) !== false || stripos( $class, 'WPLoyalty' ) !== false ) {
+            unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
+          }
+        }
+        // Supprimer le texte privacy de WooCommerce natif
+        if ( is_array( $fn ) && is_object( $fn[0] ) && method_exists( $fn[0], 'privacy_policy_text' ) && $fn[1] === 'privacy_policy_text' ) {
+          unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
+        }
+      }
+    }
+  }
+}, 1 );
+
 do_action( 'woocommerce_before_customer_login_form' );
 ?>
 
 <style>
   /* ── Fond noir page Mon Compte ───────────────────────── */
-  .woocommerce-account body,
   body.woocommerce-account {
     background-color: #0a0a0a !important;
   }
@@ -23,7 +47,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   body.woocommerce-account #page {
     background-color: #0a0a0a !important;
   }
-  /* Titre MON ESPACE */
   body.woocommerce-account .entry-title,
   body.woocommerce-account h1.entry-title {
     color: white !important;
@@ -80,11 +103,9 @@ do_action( 'woocommerce_before_customer_login_form' );
     position: relative;
   }
 
-  /* ── Panels ─────────────────────────────────────────── */
   .mb-panel { display: none; }
   .mb-panel.active { display: block; }
 
-  /* ── Labels ─────────────────────────────────────────── */
   .mb-box label {
     display: block;
     color: rgba(255,255,255,0.45);
@@ -95,7 +116,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     margin-bottom: 0.35rem;
   }
 
-  /* ── Inputs ─────────────────────────────────────────── */
   .mb-box .woocommerce-Input--text,
   .mb-box input[type="text"],
   .mb-box input[type="email"],
@@ -130,7 +150,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     -webkit-text-fill-color: white !important;
   }
 
-  /* ── Rememberme ─────────────────────────────────────── */
   .mb-box .woocommerce-form-login__rememberme {
     display: flex;
     align-items: center;
@@ -141,10 +160,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     letter-spacing: 0;
     margin-bottom: 1rem;
   }
-  .mb-box input[type="checkbox"] {
-    accent-color: #ff9900;
-    width: 14px; height: 14px;
-  }
+  .mb-box input[type="checkbox"] { accent-color: #ff9900; width: 14px; height: 14px; }
 
   /* ── Points banner ──────────────────────────────────── */
   .mb-points-banner {
@@ -179,7 +195,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   }
   .mb-privacy-notice a:hover { color: #ff9900 !important; }
 
-  /* ── Bouton ─────────────────────────────────────────── */
   .mb-box .woocommerce-form-login__submit,
   .mb-box .woocommerce-form-register__submit {
     display: block !important;
@@ -197,16 +212,10 @@ do_action( 'woocommerce_before_customer_login_form' );
     margin-bottom: 1rem;
   }
   .mb-box .woocommerce-form-login__submit:hover,
-  .mb-box .woocommerce-form-register__submit:hover {
-    background: #e68900 !important;
-    transform: scale(1.01);
-  }
+  .mb-box .woocommerce-form-register__submit:hover { background: #e68900 !important; transform: scale(1.01); }
   .mb-box .woocommerce-form-login__submit:active,
-  .mb-box .woocommerce-form-register__submit:active {
-    transform: scale(0.98) !important;
-  }
+  .mb-box .woocommerce-form-register__submit:active { transform: scale(0.98) !important; }
 
-  /* ── Liens ──────────────────────────────────────────── */
   .mb-box .lost_password a, .mb-box a {
     color: rgba(255,255,255,0.4) !important;
     font-size: 0.75rem !important;
@@ -226,12 +235,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 0.75rem 1rem !important;
     margin-bottom: 1rem;
   }
-  .mb-box p {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.78rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-  }
+  .mb-box p { color: rgba(255,255,255,0.4); font-size: 0.78rem; line-height: 1.5; margin-bottom: 1rem; }
   .mb-box .form-row { margin-bottom: 0; }
 </style>
 
@@ -290,6 +294,7 @@ do_action( 'woocommerce_before_customer_login_form' );
       <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
         <?php do_action( 'woocommerce_register_form_start' ); ?>
 
+        <!-- Banner points (le nôtre) -->
         <div class="mb-points-banner">
           <span class="mb-points-icon">🌟</span>
           <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
@@ -316,6 +321,7 @@ do_action( 'woocommerce_before_customer_login_form' );
         <p><?php esc_html_e( 'Un lien pour définir votre mot de passe sera envoyé à votre adresse e-mail.', 'woocommerce' ); ?></p>
         <?php endif; ?>
 
+        <!-- Champ date de naissance (le nôtre) -->
         <p class="woocommerce-form-row form-row-wide">
           <label for="reg_birthday">
             <?php esc_html_e( 'Date de naissance', 'woocommerce' ); ?>
@@ -324,7 +330,12 @@ do_action( 'woocommerce_before_customer_login_form' );
           <input type="date" class="woocommerce-Input woocommerce-Input--text input-text" name="billing_birthday" id="reg_birthday" max="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-10 years' ) ) ); ?>" />
         </p>
 
-        <?php do_action( 'woocommerce_register_form' ); ?>
+        <?php
+        // do_action woocommerce_register_form — les callbacks WP Loyalty et WC privacy
+        // ont été retirés en haut du fichier (priorité 1).
+        // On conserve le hook pour les autres plugins éventuels (ex: nonces tiers).
+        do_action( 'woocommerce_register_form' );
+        ?>
 
         <p class="form-row">
           <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
@@ -333,6 +344,7 @@ do_action( 'woocommerce_before_customer_login_form' );
           </button>
         </p>
 
+        <!-- Privacy notice (la nôtre) -->
         <p class="mb-privacy-notice">
           <?php
           printf(
