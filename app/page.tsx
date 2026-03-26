@@ -12,30 +12,21 @@ const menuItems = [
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden gap-8">
+    <main className="relative min-h-screen flex flex-col items-center justify-center page-bg overflow-hidden gap-8">
       <div className="relative z-10 text-center space-y-3 px-4">
         <div className="flex justify-center">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={220}
-            height={80}
-            priority
-            className="object-contain"
-          />
+          <Image src="/logo.png" alt="Logo" width={220} height={80} priority className="object-contain" />
         </div>
-        <p className="text-white/60 text-sm">Un espace pour tester des choses</p>
-        <p className="text-white/20 text-xs tracking-widest uppercase mt-2">
+        <p className="page-fg-muted text-sm">Un espace pour tester des choses</p>
+        <p className="text-xs tracking-widest uppercase mt-2" style={{ color: 'var(--fg-muted)' }}>
           Glisse le menu · ouvre pour naviguer
         </p>
       </div>
-
-      {/* Le FlowerMenu est fixed/draggable, il se positionne tout seul */}
       <FlowerMenu
         menuItems={menuItems}
         togglerSize={48}
-        backgroundColor="rgba(255,255,255,0.12)"
-        iconColor="white"
+        backgroundColor="var(--card)"
+        iconColor="var(--fg)"
         animationDuration={400}
       />
     </main>
