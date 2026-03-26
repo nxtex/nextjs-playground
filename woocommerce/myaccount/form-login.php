@@ -6,7 +6,6 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Supprimer les injections WP Loyalty via woocommerce_register_form
 add_action( 'woocommerce_register_form', function() {
   global $wp_filter;
   if ( ! isset( $wp_filter['woocommerce_register_form'] ) ) return;
@@ -27,7 +26,6 @@ do_action( 'woocommerce_before_customer_login_form' );
 ?>
 
 <style>
-  /* ── Fond noir page Mon Compte ───────────────────────── */
   body.woocommerce-account { background-color: #0a0a0a !important; }
   body.woocommerce-account .site-main,
   body.woocommerce-account main,
@@ -37,7 +35,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   body.woocommerce-account .ast-container,
   body.woocommerce-account #page { background-color: #0a0a0a !important; }
 
-  /* Cacher le titre de page (MON ESPACE) — on utilise le nôtre */
   body.woocommerce-account .entry-title,
   body.woocommerce-account h1.entry-title { display: none !important; }
   .elementor-heading-title { color: #ff9000 !important; }
@@ -54,13 +51,15 @@ do_action( 'woocommerce_before_customer_login_form' );
 
   /* ── Titre morph ──────────────────────────────────── */
   .mb-title-wrap {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 1.75rem;
-    min-height: 2.4rem;
-    position: relative;
+    /* hauteur fixe pour éviter le saut pendant le morph */
+    min-height: 3rem;
   }
   .mb-title {
-    display: inline-block;
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -69,43 +68,37 @@ do_action( 'woocommerce_before_customer_login_form' );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     white-space: nowrap;
+    /* transitions morph */
     opacity: 1;
     filter: blur(0px);
+    transform: translateY(0px) scale(1);
     transition:
-      opacity       0.32s cubic-bezier(0.4, 0, 0.2, 1),
-      filter        0.32s cubic-bezier(0.4, 0, 0.2, 1),
-      transform     0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity   0.32s cubic-bezier(0.4, 0, 0.2, 1),
+      filter    0.32s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .mb-title.mb-title--out {
     opacity: 0;
     filter: blur(10px);
-    transform: translateX(-50%) translateY(-8px) scale(0.94);
+    transform: translateY(-8px) scale(0.94);
   }
   .mb-title.mb-title--in {
     opacity: 0;
     filter: blur(10px);
-    transform: translateX(-50%) translateY(8px) scale(0.94);
+    transform: translateY(8px) scale(0.94);
   }
-  /* Accent bar sous le titre */
-  .mb-title-dot {
-    display: block;
+  .mb-title-bar {
     height: 3px;
     width: 24px;
     border-radius: 2px;
     background: linear-gradient(90deg, #ff9900, #ffcc00);
-    margin: 2.2rem auto 0;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ── Masquer injections WooCommerce indésirables ───────── */
   .woocommerce-privacy-policy-text { display: none !important; }
   .show-password-input { display: none !important; }
 
-  /* ── Tilt card wrapper ──────────────────────────────── */
   .mb-login-card {
     perspective: 900px;
     padding: 2px;
@@ -118,7 +111,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     will-change: transform;
   }
 
-  /* ── Animated border (conic-gradient rotatif) ──────── */
   @keyframes mb-spin-border {
     from { --mb-angle: 0deg; }
     to   { --mb-angle: 360deg; }
@@ -128,10 +120,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     initial-value: 0deg;
     inherits: false;
   }
-  .mb-animated-border {
-    position: relative;
-    border-radius: 16px;
-  }
+  .mb-animated-border { position: relative; border-radius: 16px; }
   .mb-animated-border::before {
     content: '';
     position: absolute;
@@ -158,13 +147,11 @@ do_action( 'woocommerce_before_customer_login_form' );
   }
   .mb-animated-border > * { position: relative; z-index: 2; }
 
-  /* ── Tabs ───────────────────────────────────────────── */
   .mb-tabs {
     display: flex;
     border-radius: 12px 12px 0 0;
     overflow: hidden;
     border: none;
-    border-bottom: none;
     position: relative;
     z-index: 2;
   }
@@ -192,7 +179,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     color: rgba(255,255,255,0.7);
   }
 
-  /* ── Glass box ──────────────────────────────────────── */
   .mb-box {
     background: rgba(255,255,255,0.03);
     backdrop-filter: blur(12px) saturate(20%);
@@ -203,7 +189,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 1.75rem;
     position: relative;
   }
-
   .mb-panel { display: none; }
   .mb-panel.active { display: block; }
 
@@ -216,7 +201,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     letter-spacing: 0.07em;
     margin-bottom: 0.35rem;
   }
-
   .mb-box .woocommerce-Input--text,
   .mb-box input[type="text"],
   .mb-box input[type="email"],
@@ -251,7 +235,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     -webkit-text-fill-color: white !important;
   }
 
-  /* ── Password row + œil ─────────────────────────────── */
   .mb-box p.mb-has-eye { position: relative; }
   .mb-eye-btn {
     position: absolute;
@@ -271,7 +254,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-eye-btn:hover { color: white; }
   .mb-eye-btn svg { width: 16px; height: 16px; }
 
-  /* ── Force du mot de passe ────────────────────────────── */
   .woocommerce-password-strength {
     border-radius: 6px !important;
     font-size: 0.72rem !important;
@@ -318,7 +300,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   }
   .mb-box input[type="checkbox"] { accent-color: #ff9900; width: 14px; height: 14px; }
 
-  /* ── Points banner ──────────────────────────────────── */
   .mb-points-banner {
     display: flex;
     align-items: center;
@@ -332,7 +313,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-points-banner .mb-points-icon { font-size: 1rem; flex-shrink: 0; }
   .mb-points-banner span { color: #ff9900; font-size: 0.78rem; font-weight: 600; line-height: 1.4; }
 
-  /* ── Privacy notice ────────────────────────────────── */
   .mb-privacy-notice {
     color: rgba(255,255,255,0.35) !important;
     font-size: 0.72rem !important;
@@ -397,10 +377,10 @@ do_action( 'woocommerce_before_customer_login_form' );
 
 <div class="mb-login-wrap">
 
-  <!-- ── Titre morph ───────────────────────────────── -->
+  <!-- Titre morph : texte AU-DESSUS du tiret orange -->
   <div class="mb-title-wrap">
     <span class="mb-title" id="mb-title-text">Bon retour</span>
-    <span class="mb-title-dot" id="mb-title-dot"></span>
+    <span class="mb-title-bar" id="mb-title-bar"></span>
   </div>
 
   <div class="mb-login-card">
@@ -415,7 +395,6 @@ do_action( 'woocommerce_before_customer_login_form' );
 
       <div class="mb-box">
 
-        <!-- LOGIN PANEL -->
         <div class="mb-panel active" id="mb-panel-login">
           <form class="woocommerce-form woocommerce-form-login login" method="post">
             <?php do_action( 'woocommerce_login_form_start' ); ?>
@@ -457,7 +436,6 @@ do_action( 'woocommerce_before_customer_login_form' );
         </div>
 
         <?php if ( 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) ) : ?>
-        <!-- REGISTER PANEL -->
         <div class="mb-panel" id="mb-panel-register">
           <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
             <?php do_action( 'woocommerce_register_form_start' ); ?>
@@ -551,27 +529,24 @@ function mbTogglePass(id, btn) {
   btn.innerHTML = isHidden ? MB_ICON_EYE_OPEN : MB_ICON_EYE_CLOSED;
 }
 
-/* ── Morph title ──────────────────────────────────── */
 var MB_TITLES = { login: 'Bon retour', register: 'Bienvenue' };
 
 function mbMorphTitle(newText) {
   var el  = document.getElementById('mb-title-text');
-  var dot = document.getElementById('mb-title-dot');
+  var bar = document.getElementById('mb-title-bar');
   if (!el || el.textContent === newText) return;
 
   el.classList.add('mb-title--out');
-
   setTimeout(function() {
     el.textContent = newText;
     el.classList.remove('mb-title--out');
     el.classList.add('mb-title--in');
-    void el.offsetWidth; /* force reflow */
+    void el.offsetWidth;
     el.classList.remove('mb-title--in');
-    if (dot) dot.style.width = Math.min(newText.length * 7.5, 90) + 'px';
+    if (bar) bar.style.width = Math.min(newText.length * 7.5, 90) + 'px';
   }, 300);
 }
 
-/* ── Switch tabs ───────────────────────────────────── */
 function mbSwitchTab(tab, el) {
   document.querySelectorAll('.mb-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.mb-tab').forEach(function(t){ t.classList.remove('active'); });
@@ -580,27 +555,22 @@ function mbSwitchTab(tab, el) {
   mbMorphTitle(MB_TITLES[tab] || 'Bon retour');
 }
 
-/* ── Tilt on mousemove ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
+  var bar = document.getElementById('mb-title-bar');
   var url = new URLSearchParams(window.location.search);
   if (url.get('action') === 'register') {
     mbSwitchTab('register', document.querySelectorAll('.mb-tab')[1]);
   } else {
-    /* Init dot width for default 'Bon retour' */
-    var dot = document.getElementById('mb-title-dot');
-    if (dot) dot.style.width = Math.min('Bon retour'.length * 7.5, 90) + 'px';
+    if (bar) bar.style.width = Math.min('Bon retour'.length * 7.5, 90) + 'px';
   }
 
   var card = document.getElementById('mb-card-inner');
   if (!card) return;
   var wrap = card.closest('.mb-login-card');
-
-  var MAX_TILT = 2;
-  var raf;
+  var MAX_TILT = 2, raf;
   var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
 
   function lerp(a, b, t) { return a + (b - a) * t; }
-
   function loop() {
     currentX = lerp(currentX, targetX, 0.1);
     currentY = lerp(currentY, targetY, 0.1);
@@ -609,15 +579,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   wrap.addEventListener('mouseenter', function() { raf = requestAnimationFrame(loop); });
-
   wrap.addEventListener('mousemove', function(e) {
     var rect = wrap.getBoundingClientRect();
-    var x = (e.clientX - rect.left) / rect.width  - 0.5;
-    var y = (e.clientY - rect.top)  / rect.height - 0.5;
-    targetX =  x * MAX_TILT * 2;
-    targetY = -y * MAX_TILT * 2;
+    targetX =  ((e.clientX - rect.left) / rect.width  - 0.5) * MAX_TILT * 2;
+    targetY = -((e.clientY - rect.top)  / rect.height - 0.5) * MAX_TILT * 2;
   });
-
   wrap.addEventListener('mouseleave', function() {
     targetX = 0; targetY = 0;
     setTimeout(function() {
