@@ -171,7 +171,7 @@ export const FlowerMenu = ({
 
   const navSize = togglerSize * 3;
 
-  // Centre par défaut au milieu de l'écran
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const x = initialX ?? window.innerWidth  / 2 - navSize / 2;
     const y = initialY ?? window.innerHeight / 2 - navSize / 2;
@@ -184,7 +184,6 @@ export const FlowerMenu = ({
     y: Math.max(0, Math.min(window.innerHeight - navSize, y)),
   }), [navSize]);
 
-  /* ── Mouse ── */
   const onMouseDown = (e: React.MouseEvent) => {
     dragging.current = true;
     didDrag.current  = false;
@@ -209,7 +208,6 @@ export const FlowerMenu = ({
     };
   }, [clamp]);
 
-  /* ── Touch ── */
   const onTouchStart = (e: React.TouchEvent) => {
     dragging.current = true;
     didDrag.current  = false;
@@ -236,7 +234,6 @@ export const FlowerMenu = ({
   }, [clamp]);
 
   const handleToggle = () => {
-    // N'ouvre/ferme pas si c'était un drag
     if (didDrag.current) return;
     setIsOpen((v) => !v);
   };
@@ -255,15 +252,11 @@ export const FlowerMenu = ({
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
     >
-      {/* Drag handle hint */}
       <div
         className="absolute inset-0 m-auto rounded-full cursor-grab active:cursor-grabbing"
         style={{ width: togglerSize, height: togglerSize, zIndex: 5 }}
       />
-
-      <nav
-        className="relative w-full h-full"
-      >
+      <nav className="relative w-full h-full">
         <MenuToggler
           isOpen={isOpen}
           onChange={handleToggle}

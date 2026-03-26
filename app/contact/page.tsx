@@ -3,11 +3,6 @@ import { PlusIcon, MessageCircle, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const contactInfo = [
-  { icon: MessageCircle, label: 'Email',   value: 'contact@21st.dev' },
-  { icon: Clock,         label: 'Horaires',value: 'Lun–Sam 9h–18h' },
-];
-
 export default function ContactPage() {
   const [consent, setConsent] = useState(false);
 
@@ -28,8 +23,8 @@ export default function ContactPage() {
               <p className="page-accent text-xs font-semibold uppercase tracking-widest">Nous contacter</p>
               <h1 className="text-4xl md:text-5xl font-bold page-fg leading-tight">
                 Nous serons ravis de{' '}
-                <span className="page-accent">répondre</span>
-                <br />à ta demande.
+                <span className="page-accent">r&eacute;pondre</span>
+                <br />&agrave; ta demande.
               </h1>
             </div>
 
@@ -42,8 +37,8 @@ export default function ContactPage() {
               <div className="p-1.5 rounded-lg page-card">
                 <MessageCircle className="h-4 w-4 page-accent" />
               </div>
-              <span className="page-fg text-sm font-medium">Parler à un conseiller</span>
-              <span className="page-fg-muted text-sm ml-1">→</span>
+              <span className="page-fg text-sm font-medium">Parler &agrave; un conseiller</span>
+              <span className="page-fg-muted text-sm ml-1">&rarr;</span>
             </Link>
 
             <div className="flex items-start gap-3 page-card page-border border rounded-xl px-5 py-4 w-fit">
@@ -51,23 +46,26 @@ export default function ContactPage() {
                 <Clock className="h-4 w-4 page-accent" />
               </div>
               <div className="space-y-0.5">
-                <p className="page-fg-muted text-xs font-semibold uppercase tracking-widest">Horaires d'ouverture</p>
-                <p className="page-fg text-sm font-medium">Lundi – Samedi</p>
-                <p className="page-accent text-sm font-semibold">9h00 – 18h00</p>
+                <p className="page-fg-muted text-xs font-semibold uppercase tracking-widest">Horaires d&apos;ouverture</p>
+                <p className="page-fg text-sm font-medium">Lundi &ndash; Samedi</p>
+                <p className="page-accent text-sm font-semibold">9h00 &ndash; 18h00</p>
               </div>
             </div>
           </div>
 
-          {/* Right — form */}
+          {/* Right */}
           <div className="page-bg-sec page-border border-t md:border-t-0 md:border-l p-6 flex flex-col justify-center gap-5">
             <p className="page-accent text-xs font-semibold uppercase tracking-widest">Formulaire de contact</p>
 
             <form className="flex w-full flex-col gap-4">
-              {[{ id: 'email', label: 'Email', type: 'email', placeholder: 'votre@email.com' },
-                { id: 'phone', label: 'Téléphone', type: 'tel', placeholder: '+33 6 00 00 00 00' }]
-                .map(({ id, label, type, placeholder }) => (
+              {[
+                { id: 'email', label: 'Email',     type: 'email', placeholder: 'votre@email.com' },
+                { id: 'phone', label: 'T&eacute;l&eacute;phone', type: 'tel',   placeholder: '+33 6 00 00 00 00' },
+              ].map(({ id, label, type, placeholder }) => (
                 <div key={id} className="flex flex-col gap-1.5">
-                  <label htmlFor={id} className="page-fg-muted text-xs font-medium uppercase tracking-widest">{label}</label>
+                  <label htmlFor={id} className="page-fg-muted text-xs font-medium uppercase tracking-widest"
+                    dangerouslySetInnerHTML={{ __html: label }}
+                  />
                   <input
                     id={id} name={id} type={type} placeholder={placeholder}
                     className="page-card page-border border rounded-lg px-3 py-2 text-sm page-fg outline-none w-full transition-colors"
@@ -85,7 +83,7 @@ export default function ContactPage() {
                 />
               </div>
 
-              <label className="flex items-start gap-2.5 cursor-pointer group">
+              <label className="flex items-start gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={consent}
@@ -93,7 +91,9 @@ export default function ContactPage() {
                   className="mt-0.5 w-4 h-4 flex-shrink-0 cursor-pointer"
                   style={{ accentColor: 'var(--accent)' }}
                 />
-                <span className="page-fg-muted text-xs leading-relaxed">Je consens à être recontacté(e) par l'équipe Monbedo.</span>
+                <span className="page-fg-muted text-xs leading-relaxed">
+                  Je consens &agrave; &ecirc;tre recontact&eacute;(e) par l&apos;&eacute;quipe Monbedo.
+                </span>
               </label>
 
               <button
@@ -102,7 +102,7 @@ export default function ContactPage() {
                 className="w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
                 style={{ background: 'var(--accent)', color: '#000' }}
               >
-                Envoyer ma demande →
+                Envoyer ma demande &rarr;
               </button>
             </form>
           </div>
