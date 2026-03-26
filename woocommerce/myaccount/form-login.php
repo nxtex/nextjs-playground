@@ -36,8 +36,8 @@ do_action( 'woocommerce_before_customer_login_form' );
   body.woocommerce-account #page { background-color: #0a0a0a !important; }
 
   body.woocommerce-account .entry-title,
-  body.woocommerce-account h1.entry-title { display: none !important; }
-  .elementor-heading-title { color: #ff9000 !important; }
+  body.woocommerce-account h1.entry-title,
+  .elementor-heading-title { display: none !important; }
   #post-8031 > div > div > div.elementor-element.elementor-element-7c8b200.e-flex.e-con-boxed.e-con.e-parent.e-lazyloaded > div {
     display: none !important;
   }
