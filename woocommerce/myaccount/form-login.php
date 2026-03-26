@@ -9,6 +9,26 @@ do_action( 'woocommerce_before_customer_login_form' );
 ?>
 
 <style>
+  /* ── Fond noir page Mon Compte ───────────────────────── */
+  .woocommerce-account body,
+  body.woocommerce-account {
+    background-color: #0a0a0a !important;
+  }
+  body.woocommerce-account .site-main,
+  body.woocommerce-account main,
+  body.woocommerce-account #main,
+  body.woocommerce-account #content,
+  body.woocommerce-account .entry-content,
+  body.woocommerce-account .ast-container,
+  body.woocommerce-account #page {
+    background-color: #0a0a0a !important;
+  }
+  /* Titre MON ESPACE */
+  body.woocommerce-account .entry-title,
+  body.woocommerce-account h1.entry-title {
+    color: white !important;
+  }
+
   .mb-login-wrap {
     max-width: 440px;
     margin: 2.5rem auto;
@@ -75,7 +95,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     margin-bottom: 0.35rem;
   }
 
-  /* ── Inputs text/email/password ──────────────────────── */
+  /* ── Inputs ─────────────────────────────────────────── */
   .mb-box .woocommerce-Input--text,
   .mb-box input[type="text"],
   .mb-box input[type="email"],
@@ -137,16 +157,8 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 0.6rem 0.875rem;
     margin-bottom: 1.25rem;
   }
-  .mb-points-banner .mb-points-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-  .mb-points-banner span {
-    color: #ff9900;
-    font-size: 0.78rem;
-    font-weight: 600;
-    line-height: 1.4;
-  }
+  .mb-points-banner .mb-points-icon { font-size: 1rem; flex-shrink: 0; }
+  .mb-points-banner span { color: #ff9900; font-size: 0.78rem; font-weight: 600; line-height: 1.4; }
 
   /* ── Privacy notice ────────────────────────────────── */
   .mb-privacy-notice {
@@ -165,9 +177,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     text-underline-offset: 2px !important;
     font-size: inherit !important;
   }
-  .mb-privacy-notice a:hover {
-    color: #ff9900 !important;
-  }
+  .mb-privacy-notice a:hover { color: #ff9900 !important; }
 
   /* ── Bouton ─────────────────────────────────────────── */
   .mb-box .woocommerce-form-login__submit,
@@ -197,17 +207,13 @@ do_action( 'woocommerce_before_customer_login_form' );
   }
 
   /* ── Liens ──────────────────────────────────────────── */
-  .mb-box .lost_password a,
-  .mb-box a {
+  .mb-box .lost_password a, .mb-box a {
     color: rgba(255,255,255,0.4) !important;
     font-size: 0.75rem !important;
     text-decoration: none !important;
     transition: color 0.2s;
   }
-  .mb-box .lost_password a:hover, .mb-box a:hover {
-    color: rgba(255,255,255,0.8) !important;
-  }
-
+  .mb-box .lost_password a:hover, .mb-box a:hover { color: rgba(255,255,255,0.8) !important; }
   .mb-box .required { color: #ff9900 !important; }
 
   .woocommerce-error, .woocommerce-message, .woocommerce-info {
@@ -220,7 +226,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 0.75rem 1rem !important;
     margin-bottom: 1rem;
   }
-
   .mb-box p {
     color: rgba(255,255,255,0.4);
     font-size: 0.78rem;
@@ -285,7 +290,6 @@ do_action( 'woocommerce_before_customer_login_form' );
       <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
         <?php do_action( 'woocommerce_register_form_start' ); ?>
 
-        <!-- Points banner -->
         <div class="mb-points-banner">
           <span class="mb-points-icon">🌟</span>
           <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
@@ -312,11 +316,10 @@ do_action( 'woocommerce_before_customer_login_form' );
         <p><?php esc_html_e( 'Un lien pour définir votre mot de passe sera envoyé à votre adresse e-mail.', 'woocommerce' ); ?></p>
         <?php endif; ?>
 
-        <!-- Date de naissance (facultatif) -->
         <p class="woocommerce-form-row form-row-wide">
           <label for="reg_birthday">
             <?php esc_html_e( 'Date de naissance', 'woocommerce' ); ?>
-            <span style="color:rgba(255,255,255,0.3); font-size:0.65rem; text-transform:none; letter-spacing:0; margin-left:0.3rem;">(<?php esc_html_e( 'facultatif', 'woocommerce' ); ?>)</span>
+            <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;text-transform:none;letter-spacing:0;margin-left:0.3rem;">(<?php esc_html_e( 'facultatif', 'woocommerce' ); ?>)</span>
           </label>
           <input type="date" class="woocommerce-Input woocommerce-Input--text input-text" name="billing_birthday" id="reg_birthday" max="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-10 years' ) ) ); ?>" />
         </p>
@@ -330,7 +333,6 @@ do_action( 'woocommerce_before_customer_login_form' );
           </button>
         </p>
 
-        <!-- Privacy notice -->
         <p class="mb-privacy-notice">
           <?php
           printf(
