@@ -36,8 +36,14 @@ do_action( 'woocommerce_before_customer_login_form' );
   body.woocommerce-account .entry-content,
   body.woocommerce-account .ast-container,
   body.woocommerce-account #page { background-color: #0a0a0a !important; }
+
+  /* Cacher le titre de page (MON ESPACE) — on utilise le nôtre */
   body.woocommerce-account .entry-title,
-  body.woocommerce-account h1.entry-title { color: white !important; }
+  body.woocommerce-account h1.entry-title { display: none !important; }
+  .elementor-heading-title { color: #ff9000 !important; }
+  #post-8031 > div > div > div.elementor-element.elementor-element-7c8b200.e-flex.e-con-boxed.e-con.e-parent.e-lazyloaded > div {
+    display: none !important;
+  }
 
   .mb-login-wrap {
     max-width: 440px;
@@ -46,13 +52,58 @@ do_action( 'woocommerce_before_customer_login_form' );
     font-family: 'Inter', Arial, sans-serif;
   }
 
+  /* ── Titre morph ──────────────────────────────────── */
+  .mb-title-wrap {
+    text-align: center;
+    margin-bottom: 1.75rem;
+    min-height: 2.4rem;
+    position: relative;
+  }
+  .mb-title {
+    display: inline-block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.75) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 1;
+    filter: blur(0px);
+    transition:
+      opacity       0.32s cubic-bezier(0.4, 0, 0.2, 1),
+      filter        0.32s cubic-bezier(0.4, 0, 0.2, 1),
+      transform     0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mb-title.mb-title--out {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateX(-50%) translateY(-8px) scale(0.94);
+  }
+  .mb-title.mb-title--in {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateX(-50%) translateY(8px) scale(0.94);
+  }
+  /* Accent bar sous le titre */
+  .mb-title-dot {
+    display: block;
+    height: 3px;
+    width: 24px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #ff9900, #ffcc00);
+    margin: 2.2rem auto 0;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   /* ── Masquer injections WooCommerce indésirables ───────── */
   .woocommerce-privacy-policy-text { display: none !important; }
   .show-password-input { display: none !important; }
-  .elementor-heading-title { color: #ff9000 !important; }
-  #post-8031 > div > div > div.elementor-element.elementor-element-7c8b200.e-flex.e-con-boxed.e-con.e-parent.e-lazyloaded > div {
-    display: none !important;
-  }
 
   /* ── Tilt card wrapper ──────────────────────────────── */
   .mb-login-card {
@@ -77,7 +128,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     initial-value: 0deg;
     inherits: false;
   }
-
   .mb-animated-border {
     position: relative;
     border-radius: 16px;
@@ -106,10 +156,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     background: #0d0d0d;
     z-index: 1;
   }
-  .mb-animated-border > * {
-    position: relative;
-    z-index: 2;
-  }
+  .mb-animated-border > * { position: relative; z-index: 2; }
 
   /* ── Tabs ───────────────────────────────────────────── */
   .mb-tabs {
@@ -209,7 +256,7 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-eye-btn {
     position: absolute;
     right: 12px;
-    top: calc(0.7rem + 0.35rem + 25px);
+    top: calc(0.7rem + 0.35rem + 20px);
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -285,7 +332,7 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-points-banner .mb-points-icon { font-size: 1rem; flex-shrink: 0; }
   .mb-points-banner span { color: #ff9900; font-size: 0.78rem; font-weight: 600; line-height: 1.4; }
 
-  /* ── Privacy notice (la nôtre) ───────────────────────── */
+  /* ── Privacy notice ────────────────────────────────── */
   .mb-privacy-notice {
     color: rgba(255,255,255,0.35) !important;
     font-size: 0.72rem !important;
@@ -349,6 +396,12 @@ do_action( 'woocommerce_before_customer_login_form' );
 </style>
 
 <div class="mb-login-wrap">
+
+  <!-- ── Titre morph ───────────────────────────────── -->
+  <div class="mb-title-wrap">
+    <span class="mb-title" id="mb-title-text">Bon retour</span>
+    <span class="mb-title-dot" id="mb-title-dot"></span>
+  </div>
 
   <div class="mb-login-card">
     <div class="mb-login-card-inner mb-animated-border" id="mb-card-inner">
@@ -476,36 +529,46 @@ do_action( 'woocommerce_before_customer_login_form' );
 </div><!-- .mb-login-wrap -->
 
 <?php
-/**
- * Lucide Eye  (visible = password shown)   → same as <Eye /> in React
- * Lucide EyeClosed (hidden = password masked) → same as <EyeClosed /> in React
- */
 function mb_eye_icon_svg( $hidden = true ) {
   $size = 'width="16" height="16"';
   $base = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-
   if ( $hidden ) {
-    /* EyeClosed — password is currently masked, show this icon to reveal */
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-closed w-4 h-4"><path d="m15 18-.722-3.25"></path><path d="M2 8a10.645 10.645 0 0 0 20 0"></path><path d="m20 15-1.726-2.05"></path><path d="m4 15 1.726-2.05"></path><path d="m9 18 .722-3.25"></path></svg>';
+    return '<svg ' . $size . ' ' . $base . '><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
   }
-
-  /* Eye — password is currently visible, show this icon to mask */
   return '<svg ' . $size . ' ' . $base . '><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 }
 ?>
 
 <script>
-/* ── Toggle mot de passe (Lucide Eye / EyeClosed) ────────── */
-var MB_ICON_EYE_CLOSED = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-closed w-4 h-4"><path d="m15 18-.722-3.25"></path><path d="M2 8a10.645 10.645 0 0 0 20 0"></path><path d="m20 15-1.726-2.05"></path><path d="m4 15 1.726-2.05"></path><path d="m9 18 .722-3.25"></path></svg>';
-
+var MB_ICON_EYE_CLOSED = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
 var MB_ICON_EYE_OPEN   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 
 function mbTogglePass(id, btn) {
   var inp = document.getElementById(id);
   if (!inp) return;
   var isHidden = inp.type === 'password';
-  inp.type    = isHidden ? 'text' : 'password';
+  inp.type      = isHidden ? 'text' : 'password';
   btn.innerHTML = isHidden ? MB_ICON_EYE_OPEN : MB_ICON_EYE_CLOSED;
+}
+
+/* ── Morph title ──────────────────────────────────── */
+var MB_TITLES = { login: 'Bon retour', register: 'Bienvenue' };
+
+function mbMorphTitle(newText) {
+  var el  = document.getElementById('mb-title-text');
+  var dot = document.getElementById('mb-title-dot');
+  if (!el || el.textContent === newText) return;
+
+  el.classList.add('mb-title--out');
+
+  setTimeout(function() {
+    el.textContent = newText;
+    el.classList.remove('mb-title--out');
+    el.classList.add('mb-title--in');
+    void el.offsetWidth; /* force reflow */
+    el.classList.remove('mb-title--in');
+    if (dot) dot.style.width = Math.min(newText.length * 7.5, 90) + 'px';
+  }, 300);
 }
 
 /* ── Switch tabs ───────────────────────────────────── */
@@ -514,12 +577,19 @@ function mbSwitchTab(tab, el) {
   document.querySelectorAll('.mb-tab').forEach(function(t){ t.classList.remove('active'); });
   document.getElementById('mb-panel-' + tab).classList.add('active');
   el.classList.add('active');
+  mbMorphTitle(MB_TITLES[tab] || 'Bon retour');
 }
 
 /* ── Tilt on mousemove ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
   var url = new URLSearchParams(window.location.search);
-  if (url.get('action') === 'register') mbSwitchTab('register', document.querySelectorAll('.mb-tab')[1]);
+  if (url.get('action') === 'register') {
+    mbSwitchTab('register', document.querySelectorAll('.mb-tab')[1]);
+  } else {
+    /* Init dot width for default 'Bon retour' */
+    var dot = document.getElementById('mb-title-dot');
+    if (dot) dot.style.width = Math.min('Bon retour'.length * 7.5, 90) + 'px';
+  }
 
   var card = document.getElementById('mb-card-inner');
   if (!card) return;
@@ -538,9 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
     raf = requestAnimationFrame(loop);
   }
 
-  wrap.addEventListener('mouseenter', function() {
-    raf = requestAnimationFrame(loop);
-  });
+  wrap.addEventListener('mouseenter', function() { raf = requestAnimationFrame(loop); });
 
   wrap.addEventListener('mousemove', function(e) {
     var rect = wrap.getBoundingClientRect();
@@ -551,8 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   wrap.addEventListener('mouseleave', function() {
-    targetX = 0;
-    targetY = 0;
+    targetX = 0; targetY = 0;
     setTimeout(function() {
       cancelAnimationFrame(raf);
       card.style.transform = 'rotateX(0deg) rotateY(0deg)';
