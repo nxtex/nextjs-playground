@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Login Form — Tabs Design (Monbedo)
@@ -50,15 +49,14 @@ do_action( 'woocommerce_before_customer_login_form' );
   /* ── Masquer injections WooCommerce indésirables ───────── */
   .woocommerce-privacy-policy-text { display: none !important; }
   .show-password-input { display: none !important; }
-  .elementor-heading-title {color: #ff9000!important;}
+  .elementor-heading-title { color: #ff9000 !important; }
   #post-8031 > div > div > div.elementor-element.elementor-element-7c8b200.e-flex.e-con-boxed.e-con.e-parent.e-lazyloaded > div {
-  display: none !important;
-}
+    display: none !important;
+  }
 
   /* ── Tilt card wrapper ──────────────────────────────── */
   .mb-login-card {
     perspective: 900px;
-    /* Laisse de la place pour le glow du border */
     padding: 2px;
     border-radius: 18px;
   }
@@ -83,7 +81,6 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-animated-border {
     position: relative;
     border-radius: 16px;
-    /* Le border animé est géré via ::before */
   }
   .mb-animated-border::before {
     content: '';
@@ -109,7 +106,6 @@ do_action( 'woocommerce_before_customer_login_form' );
     background: #0d0d0d;
     z-index: 1;
   }
-  /* Tout le contenu doit passer au-dessus des pseudo-éléments */
   .mb-animated-border > * {
     position: relative;
     z-index: 2;
@@ -120,7 +116,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     display: flex;
     border-radius: 12px 12px 0 0;
     overflow: hidden;
-    border: none; /* supprimé : le border animé fait office de contour */
+    border: none;
     border-bottom: none;
     position: relative;
     z-index: 2;
@@ -154,7 +150,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     background: rgba(255,255,255,0.03);
     backdrop-filter: blur(12px) saturate(20%);
     -webkit-backdrop-filter: blur(12px) saturate(20%);
-    border: none; /* géré par .mb-animated-border::before */
+    border: none;
     border-radius: 0 0 16px 16px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
     padding: 1.75rem;
@@ -221,11 +217,11 @@ do_action( 'woocommerce_before_customer_login_form' );
     padding: 0;
     display: flex;
     align-items: center;
-    color: rgba(255,255,255,0.35);
-    transition: color 0.2s;
+    color: rgba(255,255,255,0.40);
+    transition: color 0.3s;
     z-index: 2;
   }
-  .mb-eye-btn:hover { color: rgba(255,255,255,0.7); }
+  .mb-eye-btn:hover { color: white; }
   .mb-eye-btn svg { width: 16px; height: 16px; }
 
   /* ── Force du mot de passe ────────────────────────────── */
@@ -415,7 +411,7 @@ do_action( 'woocommerce_before_customer_login_form' );
 
             <div class="mb-points-banner">
               <span class="mb-points-icon">🌟</span>
-              <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
+              <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
             </div>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
@@ -480,24 +476,35 @@ do_action( 'woocommerce_before_customer_login_form' );
 </div><!-- .mb-login-wrap -->
 
 <?php
+/**
+ * Lucide Eye  (visible = password shown)   → same as <Eye /> in React
+ * Lucide EyeClosed (hidden = password masked) → same as <EyeClosed /> in React
+ */
 function mb_eye_icon_svg( $hidden = true ) {
+  $size = 'width="16" height="16"';
+  $base = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+
   if ( $hidden ) {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    /* EyeClosed — password is currently masked, show this icon to reveal */
+    return '<svg ' . $size . ' ' . $base . '><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
   }
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+  /* Eye — password is currently visible, show this icon to mask */
+  return '<svg ' . $size . ' ' . $base . '><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 }
 ?>
 
 <script>
-/* ── Toggle mot de passe ────────────────────────────── */
+/* ── Toggle mot de passe (Lucide Eye / EyeClosed) ────────── */
+var MB_ICON_EYE_CLOSED = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
+var MB_ICON_EYE_OPEN   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+
 function mbTogglePass(id, btn) {
   var inp = document.getElementById(id);
   if (!inp) return;
   var isHidden = inp.type === 'password';
-  inp.type = isHidden ? 'text' : 'password';
-  btn.innerHTML = isHidden
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  inp.type    = isHidden ? 'text' : 'password';
+  btn.innerHTML = isHidden ? MB_ICON_EYE_OPEN : MB_ICON_EYE_CLOSED;
 }
 
 /* ── Switch tabs ───────────────────────────────────── */
@@ -510,16 +517,14 @@ function mbSwitchTab(tab, el) {
 
 /* ── Tilt on mousemove ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function() {
-  /* URL param */
   var url = new URLSearchParams(window.location.search);
   if (url.get('action') === 'register') mbSwitchTab('register', document.querySelectorAll('.mb-tab')[1]);
 
-  /* Tilt */
   var card = document.getElementById('mb-card-inner');
   if (!card) return;
   var wrap = card.closest('.mb-login-card');
 
-  var MAX_TILT = 2; /* degrés max */
+  var MAX_TILT = 2;
   var raf;
   var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
 
@@ -538,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   wrap.addEventListener('mousemove', function(e) {
     var rect = wrap.getBoundingClientRect();
-    var x = (e.clientX - rect.left) / rect.width  - 0.5; /* -0.5 → +0.5 */
+    var x = (e.clientX - rect.left) / rect.width  - 0.5;
     var y = (e.clientY - rect.top)  / rect.height - 0.5;
     targetX =  x * MAX_TILT * 2;
     targetY = -y * MAX_TILT * 2;
@@ -547,14 +552,12 @@ document.addEventListener('DOMContentLoaded', function() {
   wrap.addEventListener('mouseleave', function() {
     targetX = 0;
     targetY = 0;
-    /* on laisse le loop finir le retour en douceur puis on arrête */
     setTimeout(function() {
       cancelAnimationFrame(raf);
       card.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }, 600);
   });
 });
-
 </script>
 
 <?php do_action( 'woocommerce_after_customer_login_form' ); ?>
