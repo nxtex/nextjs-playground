@@ -124,15 +124,11 @@ do_action( 'woocommerce_before_customer_login_form' );
     border-radius: 8px !important;
     color: white !important;
     font-size: 0.875rem !important;
-    padding: 0 14px 0 14px !important;
+    padding: 0 14px !important;
     transition: border-color 0.2s, background 0.2s;
     box-shadow: none !important;
     outline: none !important;
-    margin-bottom: 0.25rem;
-  }
-  .mb-password-wrap input[type="password"],
-  .mb-password-wrap input[type="text"] {
-    padding-right: 42px !important;
+    margin-bottom: 1rem;
   }
   .mb-box input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1) opacity(0.4);
@@ -150,12 +146,24 @@ do_action( 'woocommerce_before_customer_login_form' );
     -webkit-text-fill-color: white !important;
   }
 
-  /* ── Password wrap + œil toggle ─────────────────────── */
+  /* ── Password wrap : flex row hauteur fixe 40px ────────── */
+  /* Le wrap fait exactement la hauteur du champ.
+     Le message strength est injecté APRES le wrap par WC,
+     donc il ne déplace plus l'œil. */
   .mb-password-wrap {
+    display: flex;
+    align-items: center;
+    height: 40px;
     position: relative;
-    margin-bottom: 0.25rem;
+    margin-bottom: 1rem;
   }
-  .mb-password-wrap input { margin-bottom: 0 !important; }
+  .mb-password-wrap input[type="password"],
+  .mb-password-wrap input[type="text"] {
+    flex: 1;
+    height: 40px !important;
+    margin-bottom: 0 !important;
+    padding-right: 42px !important;
+  }
   .mb-eye-btn {
     position: absolute;
     right: 12px;
@@ -169,6 +177,7 @@ do_action( 'woocommerce_before_customer_login_form' );
     align-items: center;
     color: rgba(255,255,255,0.35);
     transition: color 0.2s;
+    z-index: 2;
   }
   .mb-eye-btn:hover { color: rgba(255,255,255,0.7); }
   .mb-eye-btn svg { width: 16px; height: 16px; }
@@ -181,9 +190,10 @@ do_action( 'woocommerce_before_customer_login_form' );
     font-size: 0.72rem !important;
     font-weight: 600 !important;
     padding: 0.3rem 0.6rem !important;
-    margin-top: 0.4rem !important;
-    margin-bottom: 0.75rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.5rem !important;
     text-align: left !important;
+    display: block;
   }
   .woocommerce-password-strength.bad,
   .woocommerce-password-strength.short {
@@ -406,7 +416,6 @@ do_action( 'woocommerce_before_customer_login_form' );
           </button>
         </p>
 
-        <!-- Privacy notice (la nôtre) -->
         <p class="mb-privacy-notice">
           <?php
           printf(
