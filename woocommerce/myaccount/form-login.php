@@ -28,22 +28,16 @@ do_action( 'woocommerce_before_customer_login_form' );
 
 <style>
   /* ── Fond noir page Mon Compte ───────────────────────── */
-  body.woocommerce-account {
-    background-color: #0a0a0a !important;
-  }
+  body.woocommerce-account { background-color: #0a0a0a !important; }
   body.woocommerce-account .site-main,
   body.woocommerce-account main,
   body.woocommerce-account #main,
   body.woocommerce-account #content,
   body.woocommerce-account .entry-content,
   body.woocommerce-account .ast-container,
-  body.woocommerce-account #page {
-    background-color: #0a0a0a !important;
-  }
+  body.woocommerce-account #page { background-color: #0a0a0a !important; }
   body.woocommerce-account .entry-title,
-  body.woocommerce-account h1.entry-title {
-    color: white !important;
-  }
+  body.woocommerce-account h1.entry-title { color: white !important; }
 
   .mb-login-wrap {
     max-width: 440px;
@@ -52,8 +46,9 @@ do_action( 'woocommerce_before_customer_login_form' );
     font-family: 'Inter', Arial, sans-serif;
   }
 
-  /* ── Cacher la privacy policy injectée par WooCommerce ── */
+  /* ── Masquer injections WooCommerce indésirables ───────── */
   .woocommerce-privacy-policy-text { display: none !important; }
+  .show-password-input { display: none !important; }
 
   /* ── Tabs ───────────────────────────────────────────── */
   .mb-tabs {
@@ -124,11 +119,11 @@ do_action( 'woocommerce_before_customer_login_form' );
     border-radius: 8px !important;
     color: white !important;
     font-size: 0.875rem !important;
-    padding: 0 14px !important;
+    padding: 0 42px 0 14px !important;
     transition: border-color 0.2s, background 0.2s;
     box-shadow: none !important;
     outline: none !important;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   .mb-box input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1) opacity(0.4);
@@ -146,28 +141,18 @@ do_action( 'woocommerce_before_customer_login_form' );
     -webkit-text-fill-color: white !important;
   }
 
-  /* ── Password wrap : flex row hauteur fixe 40px ────────── */
-  /* Le wrap fait exactement la hauteur du champ.
-     Le message strength est injecté APRES le wrap par WC,
-     donc il ne déplace plus l'œil. */
-  .mb-password-wrap {
-    display: flex;
-    align-items: center;
-    height: 40px;
+  /* ── Password row : position relative pour ancrer l'œil ── */
+  /* Le <p> parent devient le référentiel.
+     L'œil est positionné en pixels fixes depuis le top,
+     donc il ne bouge jamais, même si le <p> grandit
+     avec .woocommerce-password-strength en dessous. */
+  .mb-box p.mb-has-eye {
     position: relative;
-    margin-bottom: 1rem;
-  }
-  .mb-password-wrap input[type="password"],
-  .mb-password-wrap input[type="text"] {
-    flex: 1;
-    height: 40px !important;
-    margin-bottom: 0 !important;
-    padding-right: 42px !important;
   }
   .mb-eye-btn {
     position: absolute;
     right: 12px;
-    top: 50%;
+    top: calc(0.7rem + 0.35rem + 20px); /* label height + margin + demi-input */
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -184,13 +169,11 @@ do_action( 'woocommerce_before_customer_login_form' );
 
   /* ── Force du mot de passe ────────────────────────────── */
   .woocommerce-password-strength {
-    background: transparent !important;
-    border: none !important;
     border-radius: 6px !important;
     font-size: 0.72rem !important;
     font-weight: 600 !important;
     padding: 0.3rem 0.6rem !important;
-    margin-top: 0 !important;
+    margin-top: 0.2rem !important;
     margin-bottom: 0.5rem !important;
     text-align: left !important;
     display: block;
@@ -329,14 +312,12 @@ do_action( 'woocommerce_before_customer_login_form' );
           <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" required aria-required="true" />
         </p>
 
-        <p class="woocommerce-form-row form-row-wide">
+        <p class="woocommerce-form-row form-row-wide mb-has-eye">
           <label for="password"><?php esc_html_e( 'Mot de passe', 'woocommerce' ); ?> <span class="required" aria-hidden="true">*</span></label>
-          <div class="mb-password-wrap">
-            <input class="woocommerce-Input woocommerce-Input--text input-text" type="password" name="password" id="password" autocomplete="current-password" required aria-required="true" />
-            <button type="button" class="mb-eye-btn" onclick="mbTogglePass('password', this)" aria-label="Afficher/masquer le mot de passe">
-              <?php echo mb_eye_icon_svg( true ); ?>
-            </button>
-          </div>
+          <input class="woocommerce-Input woocommerce-Input--text input-text" type="password" name="password" id="password" autocomplete="current-password" required aria-required="true" />
+          <button type="button" class="mb-eye-btn" onclick="mbTogglePass('password', this)" aria-label="Afficher/masquer le mot de passe">
+            <?php echo mb_eye_icon_svg( true ); ?>
+          </button>
         </p>
 
         <?php do_action( 'woocommerce_login_form' ); ?>
@@ -386,14 +367,12 @@ do_action( 'woocommerce_before_customer_login_form' );
         </p>
 
         <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
-        <p class="woocommerce-form-row form-row-wide">
+        <p class="woocommerce-form-row form-row-wide mb-has-eye">
           <label for="reg_password"><?php esc_html_e( 'Mot de passe', 'woocommerce' ); ?> <span class="required" aria-hidden="true">*</span></label>
-          <div class="mb-password-wrap">
-            <input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" required aria-required="true" />
-            <button type="button" class="mb-eye-btn" onclick="mbTogglePass('reg_password', this)" aria-label="Afficher/masquer le mot de passe">
-              <?php echo mb_eye_icon_svg( true ); ?>
-            </button>
-          </div>
+          <input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" required aria-required="true" />
+          <button type="button" class="mb-eye-btn" onclick="mbTogglePass('reg_password', this)" aria-label="Afficher/masquer le mot de passe">
+            <?php echo mb_eye_icon_svg( true ); ?>
+          </button>
         </p>
         <?php else : ?>
         <p><?php esc_html_e( 'Un lien pour définir votre mot de passe sera envoyé à votre adresse e-mail.', 'woocommerce' ); ?></p>
