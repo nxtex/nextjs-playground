@@ -1,10 +1,24 @@
-import Link from 'next/link';
+'use client';
 import Image from 'next/image';
+import { FlowerMenu } from '@/components/ui/flower-menu';
+import {
+  LogIn,
+  UserPlus,
+  CreditCard,
+  Mail,
+} from 'lucide-react';
+
+const menuItems = [
+  { icon: LogIn,      href: '/login',   label: 'Se connecter' },
+  { icon: UserPlus,   href: '/signup',  label: "S'inscrire" },
+  { icon: CreditCard, href: '/payment', label: 'Paiement' },
+  { icon: Mail,       href: '/contact', label: 'Contact' },
+];
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
-      <div className="relative z-10 text-center space-y-4 px-4">
+    <main className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden gap-10">
+      <div className="relative z-10 text-center space-y-3 px-4">
         <div className="flex justify-center">
           <Image
             src="/logo.png"
@@ -15,28 +29,20 @@ export default function Home() {
             className="object-contain"
           />
         </div>
-        <p className="text-white/60">Un espace pour tester des choses</p>
-        <div className="flex items-center justify-center gap-3 mt-4">
-          <Link
-            href="/login"
-            className="inline-block px-6 py-2 bg-[#ff9900] text-black rounded-lg font-medium hover:bg-[#ff9900]/90 transition-colors"
-          >
-            Se connecter →
-          </Link>
-          <Link
-            href="/signup"
-            className="inline-block px-6 py-2 bg-white/5 text-white border border-white/10 rounded-lg font-medium hover:bg-white/10 hover:border-white/20 transition-colors"
-          >
-            S&apos;inscrire
-          </Link>
-          <Link
-            href="/payment"
-            className="inline-block px-6 py-2 bg-white text-black rounded-lg font-medium hover:bg-white/80 transition-colors"
-          >
-            Paiement 💳
-          </Link>
-        </div>
+        <p className="text-white/60 text-sm">Un espace pour tester des choses</p>
       </div>
+
+      <FlowerMenu
+        menuItems={menuItems}
+        togglerSize={48}
+        backgroundColor="rgba(255,153,0,0.25)"
+        iconColor="white"
+        animationDuration={400}
+      />
+
+      <p className="text-white/20 text-xs tracking-widest uppercase">
+        Ouvre le menu pour naviguer
+      </p>
     </main>
   );
 }
