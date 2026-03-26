@@ -239,7 +239,7 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-eye-btn {
     position: absolute;
     right: 12px;
-    top: calc(0.7rem + 0.35rem + 20px);
+    top: calc(0.7rem + 0.35rem + 25px);
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -511,14 +511,15 @@ function mb_eye_icon_svg( $hidden = true ) {
   $size = 'width="16" height="16"';
   $base = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
   if ( $hidden ) {
-    return '<svg ' . $size . ' ' . $base . '><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-closed w-4 h-4"><path d="m15 18-.722-3.25"></path><path d="M2 8a10.645 10.645 0 0 0 20 0"></path><path d="m20 15-1.726-2.05"></path><path d="m4 15 1.726-2.05"></path><path d="m9 18 .722-3.25"></path></svg>';
   }
   return '<svg ' . $size . ' ' . $base . '><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 }
 ?>
 
 <script>
-var MB_ICON_EYE_CLOSED = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10C2 10 5 6 12 6s10 4 10 4"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M22 10c-.44.664-1.011 1.41-1.695 2.04"/><path d="M15.56 13.878A5 5 0 0 1 12 15c-1.346 0-2.576-.527-3.479-1.386"/><path d="M2 10c.44.664 1.011 1.41 1.695 2.04"/><line x1="3" y1="3" x2="21" y2="21"/></svg>';
+var MB_ICON_EYE_CLOSED = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-closed w-4 h-4"><path d="m15 18-.722-3.25"></path><path d="M2 8a10.645 10.645 0 0 0 20 0"></path><path d="m20 15-1.726-2.05"></path><path d="m4 15 1.726-2.05"></path><path d="m9 18 .722-3.25"></path></svg>';
+
 var MB_ICON_EYE_OPEN   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 
 function mbTogglePass(id, btn) {
