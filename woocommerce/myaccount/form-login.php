@@ -8,21 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Supprimer les injections plugins sur woocommerce_register_form
 add_action( 'woocommerce_register_form', function() {
-  // WP Loyalty — message signup & champ DOB
   global $wp_filter;
-  if ( isset( $wp_filter['woocommerce_register_form'] ) ) {
-    foreach ( $wp_filter['woocommerce_register_form']->callbacks as $priority => $callbacks ) {
-      foreach ( $callbacks as $key => $callback ) {
-        $fn = $callback['function'];
-        // Supprimer toutes les callbacks WP Loyalty (wlr)
-        if ( is_array( $fn ) && is_object( $fn[0] ) ) {
-          $class = get_class( $fn[0] );
-          if ( stripos( $class, 'wlr' ) !== false || stripos( $class, 'wployalty' ) !== false || stripos( $class, 'WPLoyalty' ) !== false ) {
-            unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
-          }
+  if ( ! isset( $wp_filter['woocommerce_register_form'] ) ) return;
+  foreach ( $wp_filter['woocommerce_register_form']->callbacks as $priority => $callbacks ) {
+    foreach ( $callbacks as $key => $callback ) {
+      $fn = $callback['function'];
+      if ( is_array( $fn ) && is_object( $fn[0] ) ) {
+        $class = get_class( $fn[0] );
+        if ( stripos( $class, 'wlr' ) !== false || stripos( $class, 'wployalty' ) !== false || stripos( $class, 'WPLoyalty' ) !== false ) {
+          unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
         }
-        // Supprimer le texte privacy de WooCommerce natif
-        if ( is_array( $fn ) && is_object( $fn[0] ) && method_exists( $fn[0], 'privacy_policy_text' ) && $fn[1] === 'privacy_policy_text' ) {
+        if ( method_exists( $fn[0], 'privacy_policy_text' ) && $fn[1] === 'privacy_policy_text' ) {
           unset( $wp_filter['woocommerce_register_form']->callbacks[ $priority ][ $key ] );
         }
       }
@@ -128,11 +124,16 @@ do_action( 'woocommerce_before_customer_login_form' );
     border-radius: 8px !important;
     color: white !important;
     font-size: 0.875rem !important;
-    padding: 0 14px !important;
+    padding: 0 14px 0 14px !important;
     transition: border-color 0.2s, background 0.2s;
     box-shadow: none !important;
     outline: none !important;
-    margin-bottom: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  /* Padding right pour laisser place à l'œil */
+  .mb-password-wrap input[type="password"],
+  .mb-password-wrap input[type="text"] {
+    padding-right: 42px !important;
   }
   .mb-box input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1) opacity(0.4);
@@ -148,6 +149,77 @@ do_action( 'woocommerce_before_customer_login_form' );
   .mb-box input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #161616 inset !important;
     -webkit-text-fill-color: white !important;
+  }
+
+  /* ── Password wrap + œil toggle ─────────────────────── */
+  .mb-password-wrap {
+    position: relative;
+    margin-bottom: 0.25rem;
+  }
+  .mb-password-wrap input {
+    margin-bottom: 0 !important;
+  }
+  .mb-eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: rgba(255,255,255,0.35);
+    transition: color 0.2s;
+  }
+  .mb-eye-btn:hover { color: rgba(255,255,255,0.7); }
+  .mb-eye-btn svg { width: 16px; height: 16px; }
+
+  /* ── Force du mot de passe ────────────────────────────── */
+  /* Message "Très faible / Faible / Moyen / Fort" */
+  .woocommerce-password-strength {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    padding: 0.3rem 0.6rem !important;
+    margin-top: 0.4rem !important;
+    margin-bottom: 0.75rem !important;
+    text-align: left !important;
+  }
+  /* Bad (très faible) */
+  .woocommerce-password-strength.bad {
+    background: rgba(220,53,69,0.15) !important;
+    color: #ff6b7a !important;
+    border: 1px solid rgba(220,53,69,0.3) !important;
+  }
+  /* Short */
+  .woocommerce-password-strength.short {
+    background: rgba(220,53,69,0.15) !important;
+    color: #ff6b7a !important;
+    border: 1px solid rgba(220,53,69,0.3) !important;
+  }
+  /* Good (moyen) */
+  .woocommerce-password-strength.good {
+    background: rgba(255,153,0,0.12) !important;
+    color: #ff9900 !important;
+    border: 1px solid rgba(255,153,0,0.3) !important;
+  }
+  /* Strong (fort) */
+  .woocommerce-password-strength.strong {
+    background: rgba(40,167,69,0.12) !important;
+    color: #4caf7d !important;
+    border: 1px solid rgba(40,167,69,0.3) !important;
+  }
+  /* Hint "Conseil : Le mot de passe devrait..." */
+  .woocommerce-password-hint {
+    color: rgba(255,255,255,0.3) !important;
+    font-size: 0.7rem !important;
+    line-height: 1.5 !important;
+    display: block !important;
+    margin-bottom: 0.75rem !important;
   }
 
   .mb-box .woocommerce-form-login__rememberme {
@@ -262,7 +334,12 @@ do_action( 'woocommerce_before_customer_login_form' );
 
         <p class="woocommerce-form-row form-row-wide">
           <label for="password"><?php esc_html_e( 'Mot de passe', 'woocommerce' ); ?> <span class="required" aria-hidden="true">*</span></label>
-          <input class="woocommerce-Input woocommerce-Input--text input-text" type="password" name="password" id="password" autocomplete="current-password" required aria-required="true" />
+          <div class="mb-password-wrap">
+            <input class="woocommerce-Input woocommerce-Input--text input-text" type="password" name="password" id="password" autocomplete="current-password" required aria-required="true" />
+            <button type="button" class="mb-eye-btn" onclick="mbTogglePass('password', this)" aria-label="Afficher/masquer le mot de passe">
+              <?php echo mb_eye_icon_svg( true ); ?>
+            </button>
+          </div>
         </p>
 
         <?php do_action( 'woocommerce_login_form' ); ?>
@@ -294,7 +371,6 @@ do_action( 'woocommerce_before_customer_login_form' );
       <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
         <?php do_action( 'woocommerce_register_form_start' ); ?>
 
-        <!-- Banner points (le nôtre) -->
         <div class="mb-points-banner">
           <span class="mb-points-icon">🌟</span>
           <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
@@ -315,13 +391,17 @@ do_action( 'woocommerce_before_customer_login_form' );
         <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
         <p class="woocommerce-form-row form-row-wide">
           <label for="reg_password"><?php esc_html_e( 'Mot de passe', 'woocommerce' ); ?> <span class="required" aria-hidden="true">*</span></label>
-          <input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" required aria-required="true" />
+          <div class="mb-password-wrap">
+            <input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" required aria-required="true" />
+            <button type="button" class="mb-eye-btn" onclick="mbTogglePass('reg_password', this)" aria-label="Afficher/masquer le mot de passe">
+              <?php echo mb_eye_icon_svg( true ); ?>
+            </button>
+          </div>
         </p>
         <?php else : ?>
         <p><?php esc_html_e( 'Un lien pour définir votre mot de passe sera envoyé à votre adresse e-mail.', 'woocommerce' ); ?></p>
         <?php endif; ?>
 
-        <!-- Champ date de naissance (le nôtre) -->
         <p class="woocommerce-form-row form-row-wide">
           <label for="reg_birthday">
             <?php esc_html_e( 'Date de naissance', 'woocommerce' ); ?>
@@ -330,12 +410,7 @@ do_action( 'woocommerce_before_customer_login_form' );
           <input type="date" class="woocommerce-Input woocommerce-Input--text input-text" name="billing_birthday" id="reg_birthday" max="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-10 years' ) ) ); ?>" />
         </p>
 
-        <?php
-        // do_action woocommerce_register_form — les callbacks WP Loyalty et WC privacy
-        // ont été retirés en haut du fichier (priorité 1).
-        // On conserve le hook pour les autres plugins éventuels (ex: nonces tiers).
-        do_action( 'woocommerce_register_form' );
-        ?>
+        <?php do_action( 'woocommerce_register_form' ); ?>
 
         <p class="form-row">
           <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
@@ -344,7 +419,6 @@ do_action( 'woocommerce_before_customer_login_form' );
           </button>
         </p>
 
-        <!-- Privacy notice (la nôtre) -->
         <p class="mb-privacy-notice">
           <?php
           printf(
@@ -362,7 +436,30 @@ do_action( 'woocommerce_before_customer_login_form' );
   </div><!-- .mb-box -->
 </div><!-- .mb-login-wrap -->
 
+<?php
+// SVG helper pour l'œil (hidden = œil fermé, visible = œil ouvert)
+function mb_eye_icon_svg( $hidden = true ) {
+  if ( $hidden ) {
+    // œil biffé
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  }
+  // œil ouvert
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+?>
+
 <script>
+function mbTogglePass(id, btn) {
+  var inp = document.getElementById(id);
+  if (!inp) return;
+  var isHidden = inp.type === 'password';
+  inp.type = isHidden ? 'text' : 'password';
+  // Swap SVG icon
+  btn.innerHTML = isHidden
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+}
+
 function mbSwitchTab(tab, el) {
   document.querySelectorAll('.mb-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.mb-tab').forEach(t => t.classList.remove('active'));
