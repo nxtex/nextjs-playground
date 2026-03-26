@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Login Form — Tabs Design (Monbedo)
@@ -49,6 +50,10 @@ do_action( 'woocommerce_before_customer_login_form' );
   /* ── Masquer injections WooCommerce indésirables ───────── */
   .woocommerce-privacy-policy-text { display: none !important; }
   .show-password-input { display: none !important; }
+  .elementor-heading-title {color: #ff9000!important;}
+  #post-8031 > div > div > div.elementor-element.elementor-element-7c8b200.e-flex.e-con-boxed.e-con.e-parent.e-lazyloaded > div {
+  display: none !important;
+}
 
   /* ── Tilt card wrapper ──────────────────────────────── */
   .mb-login-card {
@@ -410,7 +415,7 @@ do_action( 'woocommerce_before_customer_login_form' );
 
             <div class="mb-points-banner">
               <span class="mb-points-icon">🌟</span>
-              <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
+              <span><?php esc_html_e( 'Inscrivez-vous et gagnez 50 points !', 'woocommerce' ); ?></span>
             </div>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
@@ -514,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!card) return;
   var wrap = card.closest('.mb-login-card');
 
-  var MAX_TILT = 8; /* degrés max */
+  var MAX_TILT = 2; /* degrés max */
   var raf;
   var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
 
@@ -549,6 +554,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 600);
   });
 });
+
 </script>
 
 <?php do_action( 'woocommerce_after_customer_login_form' ); ?>
