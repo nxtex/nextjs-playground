@@ -1,12 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { FlowerMenu } from '@/components/ui/flower-menu';
-import {
-  LogIn,
-  UserPlus,
-  CreditCard,
-  Mail,
-} from 'lucide-react';
+import { LogIn, UserPlus, CreditCard, Mail } from 'lucide-react';
 
 const menuItems = [
   { icon: LogIn,      href: '/login',   label: 'Se connecter' },
@@ -17,7 +12,7 @@ const menuItems = [
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden gap-10">
+    <main className="relative min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden gap-8">
       <div className="relative z-10 text-center space-y-3 px-4">
         <div className="flex justify-center">
           <Image
@@ -30,19 +25,19 @@ export default function Home() {
           />
         </div>
         <p className="text-white/60 text-sm">Un espace pour tester des choses</p>
+        <p className="text-white/20 text-xs tracking-widest uppercase mt-2">
+          Glisse le menu · ouvre pour naviguer
+        </p>
       </div>
 
+      {/* Le FlowerMenu est fixed/draggable, il se positionne tout seul */}
       <FlowerMenu
         menuItems={menuItems}
         togglerSize={48}
-        backgroundColor="rgba(255,153,0,0.25)"
+        backgroundColor="rgba(255,255,255,0.12)"
         iconColor="white"
         animationDuration={400}
       />
-
-      <p className="text-white/20 text-xs tracking-widest uppercase">
-        Ouvre le menu pour naviguer
-      </p>
     </main>
   );
 }
