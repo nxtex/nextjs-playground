@@ -48,12 +48,14 @@ export default function ContactPage() {
             </Link>
 
             {/* Horaires — full width on mobile, auto on desktop */}
-            <div className="flex items-center gap-4 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5">
+            <div className="flex items-center gap-3 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5">
               <Clock className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-              <div>
-                <p className="page-fg text-sm font-medium">Lundi &ndash; Samedi</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>9h00 &ndash; 18h00</p>
-              </div>
+             <div class="flex items-center gap-2 whitespace-nowrap">
+  <span class="page-fg text-sm font-medium">Lundi – Samedi</span>
+  <span class="text-sm font-semibold" style="color: var(--accent);">
+    9h00 – 18h00
+  </span>
+</div>
             </div>
           </div>
 
