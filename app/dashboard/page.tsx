@@ -74,7 +74,7 @@ export default function Dashboard() {
         <h3 className="font-semibold mb-4 page-fg">
           Acc&egrave;s rapide
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
           {cards.map((card) => {
             const Icon = card.icon;
             const inner = (
@@ -161,7 +161,13 @@ export default function Dashboard() {
               Notre &eacute;quipe est l&agrave; pour vous accompagner.
             </p>
           </div>
-         
+         <Link
+            href="/contact"
+            className="text-black px-5 py-2 rounded-xl hover:opacity-90 transition flex-shrink-0 text-sm font-semibold"
+            style={{ background: 'var(--accent)' }}
+          >
+            Nous contacter
+          </Link>
         </div>
 
       </div>
