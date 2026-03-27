@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, ShoppingBag, MessageCircle, MapPin, User } from "lucide-react";
+import { Home, shopping-basket, MessageCircle, gift, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
