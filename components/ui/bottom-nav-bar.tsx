@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Accueil",   icon: Home,           href: "/",                                                                    external: false },
-  { label: "Commandes", icon: ShoppingBag,     href: "https://www.monbedo.com/mon-compte/orders/#account-content",          external: true  },
+  { label: "Commandes", icon: ShoppingBag,    href: "/payment",                                                             external: false },
   { label: "Contact",   icon: MessageCircle,  href: "/contact",                                                             external: false },
-  { label: "Adresses",  icon: MapPin,         href: "https://www.monbedo.com/mon-compte/edit-address/#account-content",    external: true  },
-  { label: "Mes infos", icon: User,           href: "https://www.monbedo.com/mon-compte/edit-account/#account-content",    external: true  },
+  { label: "Adresses",  icon: MapPin,         href: "/",                                                                    external: false },
+  { label: "Mes infos", icon: User,           href: "/login",                                                               external: false },
 ];
 
 const LABEL_WIDTH = 72;
