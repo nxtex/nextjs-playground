@@ -50,12 +50,10 @@ export default function ContactPage() {
             {/* Horaires — full width on mobile, auto on desktop */}
             <div className="flex items-center gap-3 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5">
               <Clock className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-             <div class="flex items-center gap-2 whitespace-nowrap">
-  <span class="page-fg text-sm font-medium">Lundi – Samedi</span>
-  <span class="text-sm font-semibold" style="color: var(--accent);">
-    9h00 – 18h00
-  </span>
-</div>
+               <div className="flex items-center gap-2 whitespace-nowrap">
+                  <span className="page-fg text-sm font-medium">Lundi – Samedi</span>
+                  <span className="text-sm font-semibold" style="color: var(--accent);">9h00 – 18h00</span>
+              </div>
             </div>
           </div>
 
