@@ -56,10 +56,30 @@
 </html>
 
 <style>
+/* ── Casse le layout colonne d'Astra ── */
+#page .site-footer,
+.ast-container > .mb-footer,
+.mb-footer {
+	/* Sortir du flex/grid parent Astra */
+	grid-column: 1 / -1 !important;
+	-ms-grid-column-span: 9999 !important;
+	flex: 0 0 100% !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	align-self: auto !important;
+	clear: both;
+	display: flex !important;
+	float: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	box-sizing: border-box !important;
+}
+
 /* ── Footer Monbedo ── */
 .mb-footer {
-	padding: 80px 20px 40px;
-	display: flex;
+	padding: 80px 20px 40px !important;
 	justify-content: center;
 	background: linear-gradient(to bottom, #ffffff, #fafafa);
 }
