@@ -34,12 +34,12 @@ export default function ContactPage() {
               </h1>
             </div>
 
-            {/* WhatsApp CTA */}
+            {/* WhatsApp CTA — full width on mobile, auto on desktop */}
             <Link
               href="https://wa.me/33600000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full rounded-xl px-5 py-3.5 font-semibold text-sm text-white shadow-lg transition-all hover:brightness-110 hover:shadow-green-500/30 active:scale-95"
+              className="flex md:inline-flex items-center justify-center gap-3 w-full md:w-auto rounded-xl px-5 py-3.5 font-semibold text-sm text-white shadow-lg transition-all hover:brightness-110 hover:shadow-green-500/30 active:scale-95"
               style={{ background: 'linear-gradient(135deg, #25d366 0%, #1da851 100%)' }}
             >
               <WhatsAppIcon className="h-5 w-5 flex-shrink-0" />
@@ -47,10 +47,8 @@ export default function ContactPage() {
               <span className="opacity-80">&rarr;</span>
             </Link>
 
-            {/* Horaires */}
-            <div
-              className="flex items-center gap-4 w-full page-card page-border border rounded-xl px-5 py-3.5"
-            >
+            {/* Horaires — full width on mobile, auto on desktop */}
+            <div className="flex items-center gap-4 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5">
               <Clock className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
               <div>
                 <p className="page-fg text-sm font-medium">Lundi &ndash; Samedi</p>
