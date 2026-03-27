@@ -17,13 +17,6 @@ const cards = [
     external: true,
   },
   {
-    title: 'Contact',
-    desc: 'Contacter notre support',
-    icon: Headphones,
-    href: '/contact',
-    external: false,
-  },
-  {
     title: 'Adresses',
     desc: 'G\u00e9rer vos adresses de livraison',
     icon: Truck,
@@ -169,13 +162,7 @@ export default function Dashboard() {
               Notre &eacute;quipe est l&agrave; pour vous accompagner.
             </p>
           </div>
-          <Link
-            href="/contact"
-            className="text-black px-5 py-2 rounded-xl hover:opacity-90 transition flex-shrink-0 text-sm font-semibold"
-            style={{ background: 'var(--accent)' }}
-          >
-            Nous contacter
-          </Link>
+         
         </div>
 
       </div>
