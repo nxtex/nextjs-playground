@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { BottomNavBar } from '@/components/ui/bottom-nav-bar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,14 +34,16 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased pb-20`}
         suppressHydrationWarning
       >
-        {/* Toggle flottant en haut à droite sur toutes les pages */}
+        {/* Toggle flottant en haut à droite */}
         <div className="fixed top-4 right-4 z-[9999]">
           <ThemeToggle />
         </div>
         {children}
+        {/* Bottom nav sur toutes les pages */}
+        <BottomNavBar />
       </body>
     </html>
   );
