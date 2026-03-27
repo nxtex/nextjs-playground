@@ -1,6 +1,5 @@
 import {
   Package,
-  Headphones,
   Truck,
   FileText,
   ArrowRight,
