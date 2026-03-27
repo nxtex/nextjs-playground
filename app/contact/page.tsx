@@ -30,7 +30,7 @@ export default function ContactPage() {
             <div className="space-y-2">
               <p className="page-accent text-xs font-semibold uppercase tracking-widest">Nous contacter</p>
               <h1 className="text-3xl font-bold page-fg leading-tight whitespace-nowrap">
-                Un expert te{' '}<span style={{ color: 'var(--accent)' }}>guide.</span>
+                Un expert {' '}<span style={{ color: 'var(--accent)' }}>te guide.</span>
               </h1>
             </div>
 
