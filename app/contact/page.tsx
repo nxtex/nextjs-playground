@@ -34,7 +34,7 @@ export default function ContactPage() {
               </h1>
             </div>
 
-            {/* WhatsApp CTA — full width on mobile, auto on desktop */}
+            {/* WhatsApp CTA */}
             <Link
               href="https://wa.me/33600000000"
               target="_blank"
@@ -47,13 +47,12 @@ export default function ContactPage() {
               <span className="opacity-80">&rarr;</span>
             </Link>
 
-            {/* Horaires — full width on mobile, auto on desktop */}
-            <div className="flex items-center gap-4 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5">
-              <Clock className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-              <div>
-                <p className="page-fg text-sm font-medium">Lundi &ndash; Samedi</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>9h00 &ndash; 18h00</p>
-              </div>
+            {/* Horaires — tout sur une ligne */}
+            <div className="inline-flex items-center gap-3 w-full md:w-fit page-card page-border border rounded-xl px-5 py-3.5 whitespace-nowrap">
+              <Clock className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+              <span className="page-fg text-sm font-medium">Lundi &ndash; Samedi</span>
+              <span className="page-fg-muted text-sm">&bull;</span>
+              <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>9h00 &ndash; 18h00</span>
             </div>
           </div>
 
