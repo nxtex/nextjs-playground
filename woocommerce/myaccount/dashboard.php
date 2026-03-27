@@ -18,11 +18,9 @@ $allowed_html = array(
 	'a' => array( 'href' => array() ),
 );
 
-// Initiales avatar
 $display_name = $current_user->display_name;
 $initials     = strtoupper( mb_substr( $display_name, 0, 2 ) );
 
-// Commandes récentes (5 dernières)
 $customer_orders = wc_get_orders( array(
 	'customer' => get_current_user_id(),
 	'limit'    => 5,
@@ -32,25 +30,33 @@ $customer_orders = wc_get_orders( array(
 ?>
 
 <style>
-/* ── Reset scope ── */
 .mb-dashboard * { box-sizing: border-box; }
 
-/* ── Tokens ── */
+/* ── Échappe les marges du thème WooCommerce ── */
 .mb-dashboard {
-	--mb-bg:       #ffffff;
-	--mb-bg2:      #f9f9f9;
-	--mb-fg:       #0b0b0b;
-	--mb-muted:    #6b7280;
-	--mb-border:   #e5e7eb;
-	--mb-accent:   #FF9000;
-	--mb-card:     #f3f4f6;
-	--mb-radius:   1rem;
-	--mb-radius-sm:.5rem;
+	--mb-bg:        #ffffff;
+	--mb-bg2:       #f9f9f9;
+	--mb-fg:        #0b0b0b;
+	--mb-muted:     #6b7280;
+	--mb-border:    #e5e7eb;
+	--mb-accent:    #FF9000;
+	--mb-card:      #f3f4f6;
+	--mb-radius:    1rem;
+	--mb-radius-sm: .5rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 	color: var(--mb-fg);
 	background: var(--mb-bg);
 	min-height: 60vh;
 	padding-bottom: 2rem;
+	/* Échappe le padding/margin du conteneur WooCommerce */
+	margin-left:  calc(-1 * var(--wc-offset, 0px));
+	margin-right: calc(-1 * var(--wc-offset, 0px));
+	width: 100vw;
+	max-width: 100vw;
+	overflow-x: hidden;
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 /* ── Header ── */
@@ -63,6 +69,7 @@ $customer_orders = wc_get_orders( array(
 	border-bottom: 1px solid var(--mb-border);
 	flex-wrap: wrap;
 	gap: .75rem;
+	overflow: hidden;
 }
 .mb-header__title { font-size: 1.1rem; font-weight: 600; letter-spacing: .05em; }
 .mb-header__right { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
@@ -70,14 +77,14 @@ $customer_orders = wc_get_orders( array(
 	width: 2.25rem; height: 2.25rem; border-radius: 50%;
 	background: var(--mb-accent); color: #000;
 	display: flex; align-items: center; justify-content: center;
-	font-weight: 700; font-size: .8rem;
+	font-weight: 700; font-size: .8rem; flex-shrink: 0;
 }
 .mb-username { font-size: .9rem; font-weight: 500; }
 .mb-logout {
 	border: 1px solid var(--mb-border);
 	padding: .4rem 1rem; border-radius: var(--mb-radius-sm);
 	font-size: .85rem; color: var(--mb-fg); text-decoration: none;
-	transition: opacity .2s;
+	transition: opacity .2s; white-space: nowrap;
 }
 .mb-logout:hover { opacity: .65; }
 
@@ -133,7 +140,6 @@ $customer_orders = wc_get_orders( array(
 	border-radius: var(--mb-radius-sm);
 	display: flex; align-items: center; justify-content: center;
 	margin-bottom: 1rem;
-	font-size: 1.1rem;
 }
 .mb-card__title { font-weight: 600; margin: 0 0 .25rem; font-size: .95rem; }
 .mb-card__desc  { font-size: .82rem; color: var(--mb-muted); margin: 0 0 1rem; }
@@ -200,8 +206,9 @@ $customer_orders = wc_get_orders( array(
 .mb-btn:hover { opacity: .85; color: #000; text-decoration: none; }
 
 @media (max-width: 600px) {
-	.mb-header { padding: 1rem; }
+	.mb-header { padding: .85rem 1rem; }
 	.mb-inner  { padding: 1rem; }
+	.mb-hero__badge { display: none; }
 }
 </style>
 
@@ -264,7 +271,7 @@ $customer_orders = wc_get_orders( array(
 
 		</div>
 
-		<!-- TABLE commandes récentes -->
+		<!-- TABLE -->
 		<div class="mb-table-wrap">
 			<div class="mb-table-head">
 				<h3>Activit&eacute; r&eacute;cente</h3>
@@ -321,12 +328,9 @@ $customer_orders = wc_get_orders( array(
 	</div>
 
 	<?php
-	/**
-	 * @since 2.6.0
-	 */
 	do_action( 'woocommerce_account_dashboard' );
-	do_action( 'woocommerce_before_my_account' ); // deprecated
-	do_action( 'woocommerce_after_my_account' );  // deprecated
+	do_action( 'woocommerce_before_my_account' );
+	do_action( 'woocommerce_after_my_account' );
 	?>
 
 </div>
