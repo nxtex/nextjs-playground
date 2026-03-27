@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, shopping-basket, MessageCircle, gift, User } from "lucide-react";
+import { Home, ShoppingBasket, MessageCircle, Gift, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Accueil",   icon: Home,           href: "/",                                                                    external: false },
-  { label: "Compte", icon: user,    href: "/login",                                                             external: false },
+  { label: "Compte", icon: User,    href: "/login",                                                             external: false },
   { label: "Contact",   icon: MessageCircle,  href: "/contact",                                                             external: false },
-  { label: "Cadeaux",  icon: gift,         href: "/payment",                                                              external: false },
-  { label: "Panier", icon: shopping-basket,           href: "/payment",                                                               external: false },
+  { label: "Cadeaux",  icon: Gift,         href: "/payment",                                                              external: false },
+  { label: "Panier", icon: ShoppingBasket,           href: "/payment",                                                               external: false },
 ];
 
 const LABEL_WIDTH = 72;
