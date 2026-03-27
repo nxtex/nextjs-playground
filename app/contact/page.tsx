@@ -52,7 +52,7 @@ export default function ContactPage() {
               <Clock className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
                <div className="flex items-center gap-2 whitespace-nowrap">
                   <span className="page-fg text-sm font-medium">Lundi – Samedi</span>
-                  <span className="text-sm font-semibold" style="color: var(--accent);">9h00 – 18h00</span>
+                  <span className="text-sm font-semibold" style={{ color: "var(--accent)" }}>9h00 – 18h00</span>
               </div>
             </div>
           </div>
