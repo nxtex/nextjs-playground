@@ -67,7 +67,7 @@ export default function Dashboard() {
           style={{ background: 'linear-gradient(135deg, #111 0%, #2b2b2b 100%)' }}
         >
           <div>
-            <h2 className="text-xl font-semibold mb-1 text-white">Welcome back, 1urxf \uD83D\uDC4B</h2>
+            <h2 className="text-xl font-semibold mb-1 text-white">Bonjour, 1urxf \uD83D\uDC4B</h2>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               G&eacute;rez vos commandes et informations facilement.
             </p>
