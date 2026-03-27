@@ -12,7 +12,7 @@ const navItems = [
   { label: "Compte", icon: User,    href: "/login",                                                             external: false },
   { label: "Contact",   icon: MessageCircle,  href: "/contact",                                                             external: false },
   { label: "Cadeaux",  icon: Gift,         href: "/payment",                                                              external: false },
-  { label: "Panier", icon: ShoppingBasket,           href: "/Signup",                                                               external: false },
+  { label: "Panier", icon: ShoppingBasket,           href: "/signup",                                                               external: false },
 ];
 
 const LABEL_WIDTH = 72;
