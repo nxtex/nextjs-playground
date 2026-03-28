@@ -19,22 +19,27 @@
 				</p>
 			</div>
 
-			<!-- Navigation -->
-			<div class="mb-footer-column">
-				<h4>Navigation</h4>
-				<a href="<?php echo esc_url( home_url() ); ?>">Accueil</a>
-				<a href="<?php echo esc_url( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ); ?>">Mon Compte</a>
-				<a href="<?php echo esc_url( site_url( '/contact' ) ); ?>">Nous contacter</a>
-			</div>
+			<!-- Colonnes liens (wrapper pour le grid 2col mobile) -->
+			<div class="mb-footer-links">
 
-			<!-- Legal -->
-			<div class="mb-footer-column">
-				<h4>L&eacute;gal</h4>
-				<a href="<?php echo esc_url( site_url( '/mentions-legales' ) ); ?>">Mentions l&eacute;gales</a>
-				<a href="<?php echo esc_url( site_url( '/cgv' ) ); ?>">CGV &amp; Utilisation</a>
-				<a href="<?php echo esc_url( site_url( '/politique-confidentialite' ) ); ?>">Politique confidentialit&eacute;</a>
-				<a href="<?php echo esc_url( site_url( '/legislation' ) ); ?>">L&eacute;gislation</a>
-			</div>
+				<!-- Navigation -->
+				<div class="mb-footer-column">
+					<h4>Navigation</h4>
+					<a href="<?php echo esc_url( home_url() ); ?>">Accueil</a>
+					<a href="<?php echo esc_url( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ); ?>">Mon Compte</a>
+					<a href="<?php echo esc_url( site_url( '/contact' ) ); ?>">Nous contacter</a>
+				</div>
+
+				<!-- Legal -->
+				<div class="mb-footer-column">
+					<h4>L&eacute;gal</h4>
+					<a href="<?php echo esc_url( site_url( '/mentions-legales' ) ); ?>">Mentions l&eacute;gales</a>
+					<a href="<?php echo esc_url( site_url( '/cgv' ) ); ?>">CGV &amp; Utilisation</a>
+					<a href="<?php echo esc_url( site_url( '/politique-confidentialite' ) ); ?>">Politique confidentialit&eacute;</a>
+					<a href="<?php echo esc_url( site_url( '/legislation' ) ); ?>">L&eacute;gislation</a>
+				</div>
+
+			</div><!-- .mb-footer-links -->
 
 		</div>
 
@@ -60,7 +65,6 @@
 #page .site-footer,
 .ast-container > .mb-footer,
 .mb-footer {
-	/* Sortir du flex/grid parent Astra */
 	grid-column: 1 / -1 !important;
 	-ms-grid-column-span: 9999 !important;
 	flex: 0 0 100% !important;
@@ -104,15 +108,22 @@
 	margin-bottom: 30px;
 }
 
-/* Grid */
+/* ── Grid desktop : Brand | Nav | Legal ── */
 .mb-footer-grid {
 	display: grid;
-	grid-template-columns: 1.5fr 1fr 1fr;
+	grid-template-columns: 1.5fr 2fr;
 	gap: 50px;
 	margin-bottom: 40px;
 }
 
-/* Brand */
+/* Le wrapper liens occupe les 2 colonnes nav+legal sur desktop */
+.mb-footer-links {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 30px;
+}
+
+/* ── Brand ── */
 .mb-footer-brand h2 {
 	font-size: 1.6rem;
 	margin-bottom: 15px;
@@ -126,7 +137,7 @@
 	max-width: 320px;
 }
 
-/* Columns */
+/* ── Columns ── */
 .mb-footer-column h4 {
 	font-size: 1rem;
 	margin-bottom: 15px;
@@ -158,7 +169,7 @@
 	transform: translateX(4px);
 }
 
-/* Bottom */
+/* ── Bottom ── */
 .mb-footer-bottom {
 	border-top: 1px solid #eee;
 	padding-top: 20px;
@@ -176,25 +187,38 @@
 	color: #aaa;
 }
 
-/* Responsive */
+/* ── Mobile ── */
 @media (max-width: 900px) {
+	.mb-footer-container {
+		padding: 30px 20px 20px;
+	}
+
+	/* Brand pleine largeur au-dessus */
 	.mb-footer-grid {
 		grid-template-columns: 1fr;
-		text-align: center;
 		gap: 30px;
+	}
+
+	.mb-footer-brand {
+		text-align: center;
 	}
 	.mb-footer-brand p {
 		margin: 0 auto;
 	}
-	.mb-footer-column h4::after {
-		margin-left: auto;
-		margin-right: auto;
+
+	/* Navigation + Légal en 2 colonnes côte à côte */
+	.mb-footer-links {
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+		text-align: left;
 	}
+
+	.mb-footer-column h4::after {
+		margin-left: 0;
+	}
+
 	.mb-footer-column a:hover {
 		transform: none;
-	}
-	.mb-footer-container {
-		padding: 30px 20px 20px;
 	}
 }
 </style>
