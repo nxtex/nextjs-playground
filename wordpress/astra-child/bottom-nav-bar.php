@@ -196,9 +196,11 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 
 <script>
 (function() {
-	var nav = document.getElementById('mb-bottom-nav');
+	var nav   = document.getElementById('mb-bottom-nav');
+	var badge = document.getElementById('mb-cart-badge');
 	if (!nav) return;
 
+	/* ── Entrée de la nav ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
@@ -241,59 +243,78 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
-	/* ── Badge panier ──
-	   Source principale : #fkit-floating-count
-	   - data-item-count="N" (attribut mis à jour par FKCart)
-	   - textContent       (texte intérieur, aussi mis à jour)
-	   Les deux sont surveillés via MutationObserver pour couvrir
-	   ajout, suppression ET changement de quantité. */
-
-	var badge  = document.getElementById('mb-cart-badge');
-	var fkSrc  = null; // sera assigné au DOMContentLoaded
-
+	/* ── Badge panier ── */
 	function mbSyncBadge(count) {
 		if (!badge) return;
 		count = parseInt(count) || 0;
-		badge.textContent    = count > 0 ? count : '';
-		badge.style.display  = count > 0 ? 'flex' : 'none';
+		badge.textContent   = count > 0 ? count : '';
+		badge.style.display = count > 0 ? 'flex' : 'none';
 	}
 
 	function mbReadCount() {
-		if (!fkSrc) fkSrc = document.getElementById('fkit-floating-count');
-		if (!fkSrc) return 0;
-		/* Priorité à l'attribut data-item-count, fallback sur le texte */
-		var fromAttr = parseInt( fkSrc.getAttribute('data-item-count') );
-		var fromText = parseInt( fkSrc.textContent );
-		return (!isNaN(fromAttr) ? fromAttr : 0) || (!isNaN(fromText) ? fromText : 0);
+		var src = document.getElementById('fkit-floating-count');
+		if (!src) return 0;
+		var a = parseInt( src.getAttribute('data-item-count') );
+		var t = parseInt( src.textContent );
+		return (isNaN(a) ? 0 : a) || (isNaN(t) ? 0 : t);
 	}
 
-	window.addEventListener('DOMContentLoaded', function() {
-		fkSrc = document.getElementById('fkit-floating-count');
-		mbSyncBadge( mbReadCount() );
+	/* ── MutationObserver avec retry ──
+	   FKCart peut injecter #fkit-floating-count après le DOMContentLoaded.
+	   On réessaie toutes les 200 ms pendant 10 s max. */
+	var mbObserverAttached = false;
 
-		if (fkSrc && window.MutationObserver) {
-			new MutationObserver(function() {
-				mbSyncBadge( mbReadCount() );
-			}).observe(fkSrc, {
-				attributes     : true,
-				attributeFilter: ['data-item-count'],
-				childList      : true,   // noeud texte remplacé
-				characterData  : true,   // texte modifié in-place
-				subtree        : true    // descend dans les noeuds texte
-			});
-		}
-	});
+	function mbAttachObserver() {
+		if (mbObserverAttached) return;
+		var src = document.getElementById('fkit-floating-count');
+		if (!src) return; // pas encore prêt
 
-	/* Filet de sécurité : événements jQuery WooCommerce / FKCart */
-	var wcEvents = [
-		'added_to_cart',
-		'removed_from_cart',
-		'wc_fragments_refreshed',
-		'updated_cart_totals',   // +/- quantité dans le panier WC
-		'updated_wc_div'         // rafraîchissement bloc panier AJAX
-	];
-	wcEvents.forEach(function(evt) {
-		document.body.addEventListener(evt, function() { mbSyncBadge( mbReadCount() ); });
-	});
+		mbSyncBadge( mbReadCount() ); // lecture initiale
+		mbObserverAttached = true;
+
+		if (!window.MutationObserver) return;
+		new MutationObserver(function() {
+			mbSyncBadge( mbReadCount() );
+		}).observe(src, {
+			attributes     : true,
+			attributeFilter: ['data-item-count'],
+			childList      : true,
+			characterData  : true,
+			subtree        : true
+		});
+	}
+
+	/* Lancer au plus tôt, puis retry jusqu'à succès */
+	document.addEventListener('DOMContentLoaded', mbAttachObserver);
+	var mbRetry = setInterval(function() {
+		mbAttachObserver();
+		if (mbObserverAttached) clearInterval(mbRetry);
+	}, 200);
+	setTimeout(function() { clearInterval(mbRetry); }, 10000);
+
+	/* ── Événements jQuery WooCommerce (fired via jQuery custom events) ──
+	   IMPORTANT : WC/FKCart utilisent jQuery $(document).trigger(),
+	   il faut donc écouter via jQuery et non addEventListener. */
+	function mbBindJqEvents() {
+		if (typeof jQuery === 'undefined') return;
+		var $ = jQuery;
+		var events = 'added_to_cart removed_from_cart wc_fragments_refreshed updated_cart_totals updated_wc_div';
+		$(document).on(events, function() {
+			mbSyncBadge( mbReadCount() );
+		});
+	}
+
+	/* jQuery est chargé en defer sur WP — attendre qu'il soit disponible */
+	if (typeof jQuery !== 'undefined') {
+		mbBindJqEvents();
+	} else {
+		var mbJqRetry = setInterval(function() {
+			if (typeof jQuery !== 'undefined') {
+				clearInterval(mbJqRetry);
+				mbBindJqEvents();
+			}
+		}, 100);
+		setTimeout(function() { clearInterval(mbJqRetry); }, 8000);
+	}
 })();
 </script>
