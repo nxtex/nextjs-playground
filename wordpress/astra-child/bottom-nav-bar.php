@@ -10,21 +10,21 @@ $mb_nav_items = array(
 	array(
 		'label'  => 'Accueil',
 		'href'   => home_url( '/' ),
-		'match'  => home_url( '/' ),
+		'active' => is_front_page(),   // EXACT : uniquement la page d'accueil
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
 	),
 	array(
 		'label'  => 'Compte',
 		'href'   => get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ),
-		'match'  => '/mon-compte',
+		'active' => is_account_page(),
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
 	),
 	array(
 		'label'  => 'Contact',
 		'href'   => site_url( '/contact' ),
-		'match'  => '/contact',
+		'active' => ( trim( $_SERVER['REQUEST_URI'], '/' ) === 'contact' ),
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
 	),
@@ -43,8 +43,6 @@ $mb_nav_items = array(
 	),
 );
 
-$current_url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
 $cart_count = 0;
 if ( function_exists( 'WC' ) && WC()->cart ) {
 	$cart_count = WC()->cart->get_cart_contents_count();
@@ -53,9 +51,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 
 <nav class="mb-bnav" role="navigation" aria-label="Navigation principale" id="mb-bottom-nav">
 <?php foreach ( $mb_nav_items as $item ) :
-	$is_active = isset( $item['match'] ) &&
-	             ( ( strpos( $current_url, $item['match'] ) !== false ) ||
-	               ( $item['match'] === home_url('/') && ( $current_url === home_url('/') || $current_url === home_url() ) ) );
+	$is_active = ! empty( $item['active'] );
 
 	if ( $item['type'] === 'modal' ) : ?>
 	<button
@@ -199,50 +195,38 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	var nav = document.getElementById('mb-bottom-nav');
 	if (!nav) return;
 
-	/* ── Animation entrée ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
 
-	/* ── FKCart — ouvre/ferme la modal directement ── */
 	function mbToggleFkcart() {
 		var modal = document.getElementById('fkcart-modal');
 		if (!modal) return;
-
 		var isOpen = modal.classList.contains('fkcart-show');
-
 		if (isOpen) {
-			/* Fermer : laisser FKCart gérer via son propre bouton close */
 			var closeBtn = modal.querySelector('.fkcart-modal-close, .fkcart-modal-backdrop');
 			if (closeBtn) { closeBtn.click(); return; }
-			/* Fallback manuel */
 			modal.classList.remove('fkcart-show');
 			modal.style.display = 'none';
 			document.body.classList.remove('fkcart-modal-open');
 		} else {
-			/* Ouvrir */
 			modal.style.display = 'block';
-			/* forcer reflow avant d'ajouter la classe d'animation */
 			void modal.offsetWidth;
 			modal.classList.add('fkcart-show');
 			document.body.classList.add('fkcart-modal-open');
 		}
 	}
 
-	/* ── WPLoyalty launcher ── */
 	function mbToggleWll() {
 		var launcher = document.querySelector('.wll-launcher-button-container');
 		if (launcher) launcher.click();
 	}
 
-	/* ── Écoute des boutons ── */
 	nav.querySelectorAll('[data-mb-action]').forEach(function(btn) {
 		btn.addEventListener('click', function() {
 			var action = btn.getAttribute('data-mb-action');
 			if (action === 'fkcart') mbToggleFkcart();
 			if (action === 'wll')    mbToggleWll();
-
-			/* Feedback visuel bref */
 			nav.querySelectorAll('.mb-bnav__item--modal-active').forEach(function(el) {
 				el.classList.remove('mb-bnav__item--modal-active');
 			});
@@ -251,14 +235,11 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
-	/* ── Badge panier live ── */
 	function mbUpdateCartBadge() {
 		var badge = document.getElementById('mb-cart-badge');
 		if (!badge) return;
-		/* FKCart items dans le DOM */
 		var count = document.querySelectorAll('#fkcart-modal .fkcart--item').length;
 		if (!count) {
-			/* fallback WC fragments */
 			var span = document.querySelector('.fkcart-cart-count, .cart-contents .count');
 			if (span) count = parseInt(span.textContent) || 0;
 		}
@@ -268,8 +249,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
 	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
 	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
-
-	/* Init badge au chargement */
 	window.addEventListener('DOMContentLoaded', mbUpdateCartBadge);
 })();
 </script>
