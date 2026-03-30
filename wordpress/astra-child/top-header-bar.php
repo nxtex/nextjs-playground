@@ -96,19 +96,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <script>
 (function () {
-	var POPUP_ID = <?php echo (int) apply_filters( 'mb_menu_popup_id', 4269 ); ?>;
+	var POPUP_ID = 4985;
 	var btn      = document.getElementById('mb-menu-btn');
 	var burger   = document.getElementById('mb-wrapper-menu');
 	var isOpen   = false;
 
-	function getAPI() {
-		return window.elementorProFrontend
-			&& elementorProFrontend.modules
-			&& elementorProFrontend.modules.popup
-			? elementorProFrontend.modules.popup : null;
-	}
-
-	/* Reset burger — appelé quelle que soit la source de fermeture */
 	function resetBurger() {
 		burger.classList.remove('open');
 		btn.setAttribute('aria-expanded', 'false');
@@ -116,24 +108,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	}
 
 	function openPopup() {
-		var api = getAPI();
-		if (api) {
-			api.showPopup({ id: POPUP_ID });
-		} else if (window.jQuery) {
-			jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
-		}
+		elementorProFrontend.modules.popup.showPopup({ id: POPUP_ID });
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
 		isOpen = true;
 	}
 
 	function closePopup() {
-		var api = getAPI();
-		if (api) {
-			api.closePopup({ id: POPUP_ID });
-		} else if (window.jQuery) {
-			jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
-		}
+		elementorProFrontend.modules.popup.closePopup({ id: POPUP_ID });
 		resetBurger();
 	}
 
@@ -147,25 +129,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if (e.key === 'Escape' && isOpen) resetBurger();
 	});
 
-	/* ⭐ Écoute la fermeture native d'Elementor (bouton X, backdrop, etc.)
-	   pour remettre le burger en hamburger même sans passer par notre bouton */
+	/* Sync burger quand Elementor ferme la popup de son côté (bouton X, backdrop) */
 	window.addEventListener('load', function () {
-		if (window.jQuery) {
-			jQuery(document).on('elementor/popup/hide', function (e, id) {
-				if (id === POPUP_ID) resetBurger();
-			});
-		}
-		/* Fallback sans jQuery : MutationObserver sur la classe elementor-invisible */
-		var popup = document.querySelector('.elementor-' + POPUP_ID);
-		if (popup) {
-			new MutationObserver(function () {
-				var hidden =
-					popup.classList.contains('elementor-invisible') ||
-					popup.style.display === 'none' ||
-					popup.getAttribute('aria-hidden') === 'true';
-				if (hidden && isOpen) resetBurger();
-			}).observe(popup, { attributes: true, attributeFilter: ['class', 'style', 'aria-hidden'] });
-		}
+		jQuery(document).on('elementor/popup/hide', function (e, id) {
+			if (id === POPUP_ID) resetBurger();
+		});
 	});
 }());
 </script>
