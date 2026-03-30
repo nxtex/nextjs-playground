@@ -2,8 +2,6 @@
 /**
  * Top Header Bar — Monbedo
  * Coller dans : wp-content/themes/astra-child/top-header-bar.php
- * Inclure via functions.php : require get_stylesheet_directory() . '/top-header-bar.php';
- * ou via un hook : add_action( 'wp_body_open', function() { include ... } );
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -41,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		>
 			<div class="wrapper-menu" id="mb-wrapper-menu">
 				<div class="line-menu half start"></div>
-				<div class="line-menu"></div>
+				<div class="line-menu middle"></div>
 				<div class="line-menu half end"></div>
 			</div>
 		</button>
@@ -97,7 +95,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	padding: 0 16px;
 }
 
-/* Logo : centré en absolu pour rester centré même avec le bouton à droite */
 .mb-topbar__logo {
 	position: absolute;
 	left: 50%;
@@ -112,14 +109,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 @media (max-width: 480px) {
 	.mb-topbar__logo-img { height: 28px; }
-	.mb-topbar__inner { height: 54px; }
+	.mb-topbar__inner    { height: 54px; }
 }
 
 /* =====================================================
    BOUTON MENU
 ===================================================== */
 .mb-topbar__menu-btn {
-	margin-left: auto; /* pousse à droite */
+	margin-left: auto;
 	background: none;
 	border: none;
 	cursor: pointer;
@@ -128,7 +125,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	outline-offset: 4px;
 }
 
-/* Wrapper hamburger (Oleg Frolov ref) */
 .wrapper-menu {
 	width: 34px;
 	height: 26px;
@@ -136,23 +132,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	flex-direction: column;
 	justify-content: space-between;
 	transition: transform 330ms ease-out;
-	animation: mb-menu-idle 2.4s ease-in-out infinite;
+	/* PAS d'animation sur le wrapper — seulement sur les barres du haut et du bas */
 }
 
 .wrapper-menu.open {
 	transform: rotate(-45deg);
-	animation: none;
 }
 
-/* Animation idle : les barres bougent gauche-droite pour appeler l'action */
-@keyframes mb-menu-idle {
-	0%,  100% { transform: translateX(0);    }
-	20%        { transform: translateX(4px);  }
-	40%        { transform: translateX(-4px); }
-	60%        { transform: translateX(3px);  }
-	80%        { transform: translateX(0);    }
-}
-
+/* ── Barres ── */
 .line-menu {
 	background-color: #ff9900;
 	border-radius: 4px;
@@ -160,22 +147,47 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	height: 4px;
 }
 
-.line-menu.half { width: 50%; }
+.line-menu.half  { width: 50%; }
+
+/* Barre du milieu : FIXE, aucune animation */
+.line-menu.middle {
+	width: 100%;
+}
+
+/* ── Barre du HAUT : glisse vers la droite ── */
+@keyframes mb-line-top-idle {
+	0%,  100% { transform: translateX(0);   }
+	25%        { transform: translateX(6px); }
+	75%        { transform: translateX(0);   }
+}
 
 .line-menu.start {
 	transition: transform 330ms cubic-bezier(0.54, -0.81, 0.57, 0.57);
 	transform-origin: right;
+	animation: mb-line-top-idle 1.8s ease-in-out infinite;
 }
+
 .wrapper-menu.open .line-menu.start {
+	animation: none;
 	transform: rotate(-90deg) translateX(3px);
+}
+
+/* ── Barre du BAS : glisse vers la gauche (opposé) ── */
+@keyframes mb-line-bot-idle {
+	0%,  100% { transform: translateX(0);    }
+	25%        { transform: translateX(-6px); }
+	75%        { transform: translateX(0);    }
 }
 
 .line-menu.end {
 	align-self: flex-end;
 	transition: transform 330ms cubic-bezier(0.54, -0.81, 0.57, 0.57);
 	transform-origin: left;
+	animation: mb-line-bot-idle 1.8s ease-in-out infinite;
 }
+
 .wrapper-menu.open .line-menu.end {
+	animation: none;
 	transform: rotate(-90deg) translateX(-3px);
 }
 
@@ -183,7 +195,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
    MODAL MENU
 ===================================================== */
 .mb-menu-modal {
-	position: absolute; /* sous le bouton sur desktop */
+	position: absolute;
 	top: 64px;
 	right: 16px;
 	width: 280px;
@@ -207,12 +219,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	pointer-events: auto;
 }
 
-/* Scroll interne */
 .mb-menu-modal__inner {
 	padding: 16px 8px;
 }
 
-/* Liste nav */
 .mb-menu-modal__list {
 	list-style: none;
 	margin: 0;
@@ -236,7 +246,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	color: #ff9900;
 }
 
-/* Backdrop (mobile) */
+/* Backdrop */
 .mb-menu-backdrop {
 	position: fixed;
 	inset: 0;
@@ -251,7 +261,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	pointer-events: auto;
 }
 
-/* ── Mobile : modal plein écran glissante du haut ── */
+/* ── Mobile ── */
 @media (max-width: 768px) {
 	.mb-menu-modal {
 		position: fixed;
@@ -286,7 +296,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		backdrop.removeAttribute('hidden');
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
-		/* Focus premier lien */
 		var firstLink = modal.querySelector('a');
 		if (firstLink) setTimeout(function() { firstLink.focus(); }, 50);
 	}
@@ -304,12 +313,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 	backdrop.addEventListener('click', mbCloseMenu);
 
-	/* Fermer sur Escape */
 	document.addEventListener('keydown', function(e) {
 		if (e.key === 'Escape' && !modal.hasAttribute('hidden')) mbCloseMenu();
 	});
 
-	/* Fermer si clic en dehors (desktop) */
 	document.addEventListener('click', function(e) {
 		if (!modal.hasAttribute('hidden') && !modal.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
 			mbCloseMenu();
