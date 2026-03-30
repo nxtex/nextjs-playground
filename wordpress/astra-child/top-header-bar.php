@@ -5,6 +5,17 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
+<!-- Barre promo Elementor -->
+<div class="elementor-element elementor-element-0fdc6ac e-flex e-con-boxed e-con e-parent e-lazyloaded" data-id="0fdc6ac" data-element_type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+	<div class="e-con-inner">
+		<div class="elementor-element elementor-element-9a679d3 elementor-widget elementor-widget-heading" data-id="9a679d3" data-element_type="widget" data-widget_type="heading.default">
+			<div class="elementor-widget-container">
+				<h2 class="elementor-heading-title elementor-size-default"> Livraison +3G offerts d&egrave;s 69&euro;</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
 <header class="mb-topbar" id="mb-topbar">
 	<div class="mb-topbar__inner">
 
@@ -74,9 +85,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	30%       { transform: translateX(8px); }
 	70%       { transform: translateX(0);   }
 }
+/* Barre du haut : part vers la droite */
 .line-menu.start {
+	align-self: flex-end;
 	transition: transform 330ms cubic-bezier(0.54,-0.81,0.57,0.57);
-	transform-origin: right;
+	transform-origin: left;
 	animation: mb-line-top-idle 1.8s ease-in-out infinite;
 }
 .wrapper-menu.open .line-menu.start { animation: none; transform: rotate(-90deg) translateX(3px); }
@@ -85,10 +98,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	30%       { transform: translateX(-8px); }
 	70%       { transform: translateX(0);    }
 }
+/* Barre du bas : part vers la gauche */
 .line-menu.end {
-	align-self: flex-end;
+	align-self: flex-start;
 	transition: transform 330ms cubic-bezier(0.54,-0.81,0.57,0.57);
-	transform-origin: left;
+	transform-origin: right;
 	animation: mb-line-bot-idle 1.8s ease-in-out infinite;
 }
 .wrapper-menu.open .line-menu.end { animation: none; transform: rotate(-90deg) translateX(-3px); }
@@ -102,15 +116,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 	if (!btn) return;
 
-	/* Elementor ouvre la popup via le sélecteur #mb-menu-btn —
-	   on gère seulement l'état visuel du burger */
 	btn.addEventListener('click', function () {
 		burger.classList.toggle('open');
 		btn.setAttribute('aria-expanded', burger.classList.contains('open') ? 'true' : 'false');
 	});
 
-	/* Remet le burger en hamburger quand Elementor ferme la popup
-	   (bouton X natif, backdrop, touche Escape) */
 	window.addEventListener('load', function () {
 		if (window.jQuery) {
 			jQuery(document).on('elementor/popup/hide', function (e, id) {
