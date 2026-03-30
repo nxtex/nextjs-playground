@@ -96,17 +96,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <script>
 (function () {
-	var POPUP_ID  = 1676;
-	var POPUP_EL  = '#elementor-popup-modal-' + POPUP_ID;
-	var btn       = document.getElementById('mb-menu-btn');
-	var burger    = document.getElementById('mb-wrapper-menu');
-	var isOpen    = false;
-	var popup     = null;
-
-	function getPopup() {
-		if (!popup) popup = document.querySelector(POPUP_EL);
-		return popup;
-	}
+	var POPUP_ID = 4269;
+	var btn      = document.getElementById('mb-menu-btn');
+	var burger   = document.getElementById('mb-wrapper-menu');
+	var isOpen   = false;
 
 	function resetBurger() {
 		burger.classList.remove('open');
@@ -115,16 +108,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	}
 
 	function openPopup() {
-		var el = getPopup();
-		if (el) el.style.display = 'block';
+		/* Utilise le lien natif Elementor pour ouvrir la popup */
+		var trigger = document.querySelector(
+			'a[href*="popup%3Aopen"][href*="' + POPUP_ID + '"],' +
+			'a[href*="popup:open"][href*="' + POPUP_ID + '"]'
+		);
+		if (trigger) {
+			trigger.click();
+		} else if (window.jQuery) {
+			jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
+		}
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
 		isOpen = true;
 	}
 
 	function closePopup() {
-		var el = getPopup();
-		if (el) el.style.display = 'none';
+		var modal = document.getElementById('elementor-popup-modal-' + POPUP_ID);
+		if (modal) modal.style.display = 'none';
+		if (window.jQuery) jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
 		resetBurger();
 	}
 
@@ -138,18 +140,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if (e.key === 'Escape' && isOpen) closePopup();
 	});
 
-	/* Sync burger si Elementor ferme la popup tout seul */
+	/* Sync burger si Elementor ferme la popup tout seul (bouton X, backdrop) */
 	window.addEventListener('load', function () {
-		var el = getPopup();
-		if (el) {
-			new MutationObserver(function () {
-				if (el.style.display === 'none' && isOpen) resetBurger();
-			}).observe(el, { attributes: true, attributeFilter: ['style'] });
-		}
 		if (window.jQuery) {
 			jQuery(document).on('elementor/popup/hide', function (e, id) {
 				if (id === POPUP_ID) resetBurger();
 			});
+		}
+		var modal = document.getElementById('elementor-popup-modal-' + POPUP_ID);
+		if (modal) {
+			new MutationObserver(function () {
+				if (modal.style.display === 'none' && isOpen) resetBurger();
+			}).observe(modal, { attributes: true, attributeFilter: ['style'] });
 		}
 	});
 }());
