@@ -99,59 +99,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	var POPUP_ID = 4269;
 	var btn      = document.getElementById('mb-menu-btn');
 	var burger   = document.getElementById('mb-wrapper-menu');
-	var isOpen   = false;
-
-	function resetBurger() {
-		burger.classList.remove('open');
-		btn.setAttribute('aria-expanded', 'false');
-		isOpen = false;
-	}
-
-	function openPopup() {
-		/* Utilise le lien natif Elementor pour ouvrir la popup */
-		var trigger = document.querySelector(
-			'a[href*="popup%3Aopen"][href*="' + POPUP_ID + '"],' +
-			'a[href*="popup:open"][href*="' + POPUP_ID + '"]'
-		);
-		if (trigger) {
-			trigger.click();
-		} else if (window.jQuery) {
-			jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
-		}
-		burger.classList.add('open');
-		btn.setAttribute('aria-expanded', 'true');
-		isOpen = true;
-	}
-
-	function closePopup() {
-		var modal = document.getElementById('elementor-popup-modal-' + POPUP_ID);
-		if (modal) modal.style.display = 'none';
-		if (window.jQuery) jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
-		resetBurger();
-	}
 
 	if (!btn) return;
 
+	/* Elementor ouvre la popup via le sélecteur #mb-menu-btn —
+	   on gère seulement l'état visuel du burger */
 	btn.addEventListener('click', function () {
-		isOpen ? closePopup() : openPopup();
+		burger.classList.toggle('open');
+		btn.setAttribute('aria-expanded', burger.classList.contains('open') ? 'true' : 'false');
 	});
 
-	document.addEventListener('keydown', function (e) {
-		if (e.key === 'Escape' && isOpen) closePopup();
-	});
-
-	/* Sync burger si Elementor ferme la popup tout seul (bouton X, backdrop) */
+	/* Remet le burger en hamburger quand Elementor ferme la popup
+	   (bouton X natif, backdrop, touche Escape) */
 	window.addEventListener('load', function () {
 		if (window.jQuery) {
 			jQuery(document).on('elementor/popup/hide', function (e, id) {
-				if (id === POPUP_ID) resetBurger();
+				if (id === POPUP_ID) {
+					burger.classList.remove('open');
+					btn.setAttribute('aria-expanded', 'false');
+				}
 			});
-		}
-		var modal = document.getElementById('elementor-popup-modal-' + POPUP_ID);
-		if (modal) {
-			new MutationObserver(function () {
-				if (modal.style.display === 'none' && isOpen) resetBurger();
-			}).observe(modal, { attributes: true, attributeFilter: ['style'] });
 		}
 	});
 }());
