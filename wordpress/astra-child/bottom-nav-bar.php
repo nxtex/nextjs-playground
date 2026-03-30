@@ -10,21 +10,21 @@ $mb_nav_items = array(
 	array(
 		'label'  => 'Accueil',
 		'href'   => home_url( '/' ),
-		'active' => is_front_page(),   // EXACT : uniquement la page d'accueil
+		'active' => is_front_page(),
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
 	),
 	array(
 		'label'  => 'Compte',
 		'href'   => get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ),
-		'active' => is_account_page(),
+		'active' => function_exists( 'is_account_page' ) && is_account_page(),
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
 	),
 	array(
 		'label'  => 'Contact',
 		'href'   => site_url( '/contact' ),
-		'active' => ( trim( $_SERVER['REQUEST_URI'], '/' ) === 'contact' ),
+		'active' => is_page( 'contact' ),   // WP page slug "contact"
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
 	),
@@ -43,15 +43,24 @@ $mb_nav_items = array(
 	),
 );
 
+// Determine if any link item is active
+$mb_any_active = false;
+foreach ( $mb_nav_items as $item ) {
+	if ( $item['type'] === 'link' && ! empty( $item['active'] ) ) {
+		$mb_any_active = true;
+		break;
+	}
+}
+
 $cart_count = 0;
 if ( function_exists( 'WC' ) && WC()->cart ) {
 	$cart_count = WC()->cart->get_cart_contents_count();
 }
 ?>
 
-<nav class="mb-bnav" role="navigation" aria-label="Navigation principale" id="mb-bottom-nav">
+<nav class="mb-bnav<?php echo $mb_any_active ? ' mb-bnav--has-active' : ''; ?>" role="navigation" aria-label="Navigation principale" id="mb-bottom-nav">
 <?php foreach ( $mb_nav_items as $item ) :
-	$is_active = ! empty( $item['active'] );
+	$is_active = $item['type'] === 'link' && ! empty( $item['active'] );
 
 	if ( $item['type'] === 'modal' ) : ?>
 	<button
@@ -82,6 +91,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 </nav>
 
 <style>
+/* ── Force light theme always ── */
 .mb-bnav {
 	position: fixed;
 	bottom: 1rem;
@@ -93,15 +103,16 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	gap: 4px;
 	padding: 8px;
 	height: 52px;
-	min-width: 320px;
-	max-width: 95vw;
-	width: fit-content;
 	border-radius: 9999px;
-	background: #ffffff;
-	border: 1px solid #e5e7eb;
-	box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+	background: #ffffff !important;
+	border: 1px solid #e5e7eb !important;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06) !important;
+	color: #111 !important;
 	opacity: 0;
 	transition: none;
+	/* Width: icons-only by default, expands when an item is active */
+	width: fit-content;
+	max-width: 95vw;
 }
 .mb-bnav.mb-bnav--visible {
 	opacity: 1;
@@ -109,6 +120,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),
 	            transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
 }
+
 .mb-bnav__item {
 	display: flex;
 	align-items: center;
@@ -120,7 +132,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	border-radius: 9999px;
 	text-decoration: none !important;
 	color: #9ca3af;
-	transition: background 0.2s, color 0.2s, max-width 0.35s cubic-bezier(0.34,1.2,0.64,1);
+	transition: background 0.2s, color 0.2s, max-width 0.35s cubic-bezier(0.34,1.2,0.64,1), gap 0.2s;
 	max-width: 44px;
 	overflow: hidden;
 	white-space: nowrap;
@@ -134,13 +146,16 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	font-family: inherit;
 }
 .mb-bnav__item:hover { opacity: 0.8; }
-.mb-bnav__item--active,
+
+/* Active state — only shown when nav has an active item */
+.mb-bnav--has-active .mb-bnav__item--active,
 .mb-bnav__item.mb-bnav__item--modal-active {
 	background: rgba(255,153,0,0.12);
 	color: #ff9900;
 	gap: 6px;
 	max-width: 140px;
 }
+
 .mb-bnav__icon {
 	display: flex;
 	align-items: center;
@@ -148,6 +163,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	flex-shrink: 0;
 	position: relative;
 }
+
 .mb-bnav__badge {
 	position: absolute;
 	top: -6px;
@@ -164,6 +180,8 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	justify-content: center;
 	line-height: 1;
 }
+
+/* Labels: hidden by default, visible only on active item */
 .mb-bnav__label {
 	font-size: 0.75rem;
 	font-weight: 500;
@@ -178,15 +196,11 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	margin-left: 0;
 	color: #ff9900;
 }
-.mb-bnav__item--active .mb-bnav__label,
+.mb-bnav--has-active .mb-bnav__item--active .mb-bnav__label,
 .mb-bnav__item.mb-bnav__item--modal-active .mb-bnav__label {
 	max-width: 72px;
 	opacity: 1;
 	margin-left: 2px;
-}
-@media (prefers-color-scheme: dark) {
-	.mb-bnav { background: #1a1a1a; border-color: #2a2a2a; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-	.mb-bnav__item { color: #6b7280; }
 }
 </style>
 
@@ -199,6 +213,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
 
+	/* ── FKCart toggle ── */
 	function mbToggleFkcart() {
 		var modal = document.getElementById('fkcart-modal');
 		if (!modal) return;
@@ -217,6 +232,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		}
 	}
 
+	/* ── WPLoyalty toggle ── */
 	function mbToggleWll() {
 		var launcher = document.querySelector('.wll-launcher-button-container');
 		if (launcher) launcher.click();
@@ -235,17 +251,34 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
+	/* ── Badge panier ── */
+	/* FKCart affiche le compte dans .fkcart-title span : "Mon panier(1)" */
 	function mbUpdateCartBadge() {
 		var badge = document.getElementById('mb-cart-badge');
 		if (!badge) return;
-		var count = document.querySelectorAll('#fkcart-modal .fkcart--item').length;
-		if (!count) {
-			var span = document.querySelector('.fkcart-cart-count, .cart-contents .count');
-			if (span) count = parseInt(span.textContent) || 0;
+		var count = 0;
+
+		/* 1. Lire le (n) dans le titre FKCart */
+		var titleSpan = document.querySelector('.fkcart-title span');
+		if (titleSpan) {
+			count = parseInt( titleSpan.textContent.replace(/\D/g, '') ) || 0;
 		}
+
+		/* 2. Fallback : compter les lignes d'articles */
+		if (!count) {
+			count = document.querySelectorAll('#fkcart-modal .fkcart--item').length;
+		}
+
+		/* 3. Fallback WC */
+		if (!count) {
+			var wcSpan = document.querySelector('.cart-contents .count');
+			if (wcSpan) count = parseInt(wcSpan.textContent) || 0;
+		}
+
 		badge.textContent = count > 0 ? count : '';
 		badge.style.display = count > 0 ? 'flex' : 'none';
 	}
+
 	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
 	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
 	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
