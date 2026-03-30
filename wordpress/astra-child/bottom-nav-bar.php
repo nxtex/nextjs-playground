@@ -1,54 +1,50 @@
 <?php
 /**
  * Bottom Navigation Bar — Monbedo
- * À inclure dans footer.php juste avant </body> via :
- *   <?php get_template_part( 'bottom-nav-bar' ); ?>
- * Ou appeler directement dans footer.php avec include.
- *
  * Coller dans : wp-content/themes/astra-child/bottom-nav-bar.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Liens de navigation
 $mb_nav_items = array(
 	array(
-		'label' => 'Accueil',
-		'href'  => home_url( '/' ),
-		'match' => home_url( '/' ),
-		'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+		'label'  => 'Accueil',
+		'href'   => home_url( '/' ),
+		'match'  => home_url( '/' ),
+		'type'   => 'link',
+		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
 	),
 	array(
-		'label' => 'Compte',
-		'href'  => get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ),
-		'match' => '/mon-compte',
-		'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+		'label'  => 'Compte',
+		'href'   => get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ),
+		'match'  => '/mon-compte',
+		'type'   => 'link',
+		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
 	),
 	array(
-		'label' => 'Contact',
-		'href'  => site_url( '/contact' ),
-		'match' => '/contact',
-		'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+		'label'  => 'Contact',
+		'href'   => site_url( '/contact' ),
+		'match'  => '/contact',
+		'type'   => 'link',
+		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
 	),
 	array(
-		'label' => 'Cadeaux',
-		'href'  => site_url( '/cadeaux' ),
-		'match' => '/cadeaux',
-		'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
+		'label'  => 'Cadeaux',
+		'type'   => 'modal',
+		'action' => 'wll', /* clique .wll-launcher-button-container */
+		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
 	),
 	array(
-		'label' => 'Panier',
-		'href'  => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : site_url( '/panier' ),
-		'match' => '/panier',
-		'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
-		'cart'  => true,
+		'label'  => 'Panier',
+		'type'   => 'modal',
+		'action' => 'fkcart', /* clique .fkcart-slider-header */
+		'cart'   => true,
+		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
 	),
 );
 
-// URL courante pour détecter l'item actif
 $current_url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-// Compte panier WooCommerce
 $cart_count = 0;
 if ( function_exists( 'WC' ) && WC()->cart ) {
 	$cart_count = WC()->cart->get_cart_contents_count();
@@ -56,15 +52,17 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 ?>
 
 <nav class="mb-bnav" role="navigation" aria-label="Navigation principale" id="mb-bottom-nav">
-<?php foreach ( $mb_nav_items as $idx => $item ) :
-	$is_active = ( strpos( $current_url, $item['match'] ) !== false ) ||
-	             ( $item['match'] === home_url('/') && ( $current_url === home_url('/') || $current_url === home_url() ) );
-?>
-	<a
-		href="<?php echo esc_url( $item['href'] ); ?>"
-		class="mb-bnav__item<?php echo $is_active ? ' mb-bnav__item--active' : ''; ?>"
+<?php foreach ( $mb_nav_items as $item ) :
+	$is_active = isset( $item['match'] ) &&
+	             ( ( strpos( $current_url, $item['match'] ) !== false ) ||
+	               ( $item['match'] === home_url('/') && ( $current_url === home_url('/') || $current_url === home_url() ) ) );
+
+	if ( $item['type'] === 'modal' ) : ?>
+	<button
+		type="button"
+		class="mb-bnav__item mb-bnav__btn"
 		aria-label="<?php echo esc_attr( $item['label'] ); ?>"
-		data-label="<?php echo esc_attr( $item['label'] ); ?>"
+		data-mb-action="<?php echo esc_attr( $item['action'] ); ?>"
 	>
 		<span class="mb-bnav__icon">
 			<?php echo $item['icon']; ?>
@@ -73,7 +71,17 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 			<?php endif; ?>
 		</span>
 		<span class="mb-bnav__label"><?php echo esc_html( $item['label'] ); ?></span>
+	</button>
+	<?php else : ?>
+	<a
+		href="<?php echo esc_url( $item['href'] ); ?>"
+		class="mb-bnav__item<?php echo $is_active ? ' mb-bnav__item--active' : ''; ?>"
+		aria-label="<?php echo esc_attr( $item['label'] ); ?>"
+	>
+		<span class="mb-bnav__icon"><?php echo $item['icon']; ?></span>
+		<span class="mb-bnav__label"><?php echo esc_html( $item['label'] ); ?></span>
 	</a>
+	<?php endif; ?>
 <?php endforeach; ?>
 </nav>
 
@@ -98,7 +106,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
 	opacity: 0;
 	transition: none;
-	/* Animation d'entrée déclenchée par JS */
 }
 .mb-bnav.mb-bnav--visible {
 	opacity: 1;
@@ -123,10 +130,18 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	overflow: hidden;
 	white-space: nowrap;
 	position: relative;
+	cursor: pointer;
+}
+.mb-bnav__btn {
+	background: none;
+	border: none;
+	outline: none;
+	font-family: inherit;
 }
 .mb-bnav__item:hover { opacity: 0.8; }
 
-.mb-bnav__item--active {
+.mb-bnav__item--active,
+.mb-bnav__item.mb-bnav__item--modal-active {
 	background: rgba(255,153,0,0.12);
 	color: #ff9900;
 	gap: 6px;
@@ -172,16 +187,13 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	margin-left: 0;
 	color: #ff9900;
 }
-.mb-bnav__item--active .mb-bnav__label {
+.mb-bnav__item--active .mb-bnav__label,
+.mb-bnav__item.mb-bnav__item--modal-active .mb-bnav__label {
 	max-width: 72px;
 	opacity: 1;
 	margin-left: 2px;
 }
 
-/* Masquer sur desktop si voulu — à commenter pour garder partout */
-/* @media (min-width: 1024px) { .mb-bnav { display: none; } } */
-
-/* Dark mode auto */
 @media (prefers-color-scheme: dark) {
 	.mb-bnav {
 		background: #1a1a1a;
@@ -194,31 +206,57 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 
 <script>
 (function() {
-	// Anim d'entrée
 	var nav = document.getElementById('mb-bottom-nav');
 	if (!nav) return;
+
+	/* ── Animation d'entrée ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
 
-	// Mise à jour dynamique du badge panier WooCommerce via fragments
-	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
-	document.body.addEventListener('wc_fragment_refresh',    mbUpdateCartBadge);
-	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
-	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
+	/* ── Boutons modals ── */
+	nav.querySelectorAll('[data-mb-action]').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			var action = btn.getAttribute('data-mb-action');
 
+			if (action === 'fkcart') {
+				/* FluentCart — cherche le trigger dans l'ordre */
+				var trigger =
+					document.querySelector('.fkcart-slider-header') ||
+					document.querySelector('[data-fkcart-trigger]') ||
+					document.querySelector('.fkcart-open-trigger') ||
+					document.querySelector('.fkcart-cart-icon');
+				if (trigger) trigger.click();
+			}
+
+			if (action === 'wll') {
+				/* WPLoyalty launcher button */
+				var launcher = document.querySelector('.wll-launcher-button-container');
+				if (launcher) launcher.click();
+			}
+
+			/* Feedback visuel actif sur le bouton modal */
+			nav.querySelectorAll('.mb-bnav__item--modal-active').forEach(function(el) {
+				el.classList.remove('mb-bnav__item--modal-active');
+			});
+			btn.classList.add('mb-bnav__item--modal-active');
+			setTimeout(function() {
+				btn.classList.remove('mb-bnav__item--modal-active');
+			}, 600);
+		});
+	});
+
+	/* ── Badge panier live ── */
 	function mbUpdateCartBadge() {
-		var countEl = document.querySelector('.woocommerce-cart-hash, .cart-count, span.count');
-		var badge   = document.getElementById('mb-cart-badge');
+		var badge = document.getElementById('mb-cart-badge');
 		if (!badge) return;
-		var count = 0;
-		var mini  = document.querySelector('.woocommerce-mini-cart__total, .widget_shopping_cart .cart_list li');
-		if (mini) {
-			var items = document.querySelectorAll('.woocommerce-mini-cart__total ~ .mini_cart_item, .widget_shopping_cart .cart_list li');
-			count = items.length;
-		}
+		var items = document.querySelectorAll('.fkcart-item, .woocommerce-mini-cart__item, .mini_cart_item');
+		var count = items.length;
 		badge.textContent = count > 0 ? count : '';
 		badge.style.display = count > 0 ? 'flex' : 'none';
 	}
+	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
+	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
+	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
 })();
 </script>
