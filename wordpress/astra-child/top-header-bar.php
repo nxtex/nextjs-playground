@@ -96,10 +96,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <script>
 (function () {
-	var POPUP_ID = 4985;
-	var btn      = document.getElementById('mb-menu-btn');
-	var burger   = document.getElementById('mb-wrapper-menu');
-	var isOpen   = false;
+	var POPUP_ID  = 1676;
+	var POPUP_EL  = '#elementor-popup-modal-' + POPUP_ID;
+	var btn       = document.getElementById('mb-menu-btn');
+	var burger    = document.getElementById('mb-wrapper-menu');
+	var isOpen    = false;
+	var popup     = null;
+
+	function getPopup() {
+		if (!popup) popup = document.querySelector(POPUP_EL);
+		return popup;
+	}
 
 	function resetBurger() {
 		burger.classList.remove('open');
@@ -108,14 +115,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	}
 
 	function openPopup() {
-		jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
+		var el = getPopup();
+		if (el) el.style.display = 'block';
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
 		isOpen = true;
 	}
 
 	function closePopup() {
-		jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
+		var el = getPopup();
+		if (el) el.style.display = 'none';
 		resetBurger();
 	}
 
@@ -126,14 +135,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	});
 
 	document.addEventListener('keydown', function (e) {
-		if (e.key === 'Escape' && isOpen) resetBurger();
+		if (e.key === 'Escape' && isOpen) closePopup();
 	});
 
-	/* Sync quand Elementor ferme tout seul (bouton X natif, backdrop) */
+	/* Sync burger si Elementor ferme la popup tout seul */
 	window.addEventListener('load', function () {
-		jQuery(document).on('elementor/popup/hide', function (e, id) {
-			if (id === POPUP_ID) resetBurger();
-		});
+		var el = getPopup();
+		if (el) {
+			new MutationObserver(function () {
+				if (el.style.display === 'none' && isOpen) resetBurger();
+			}).observe(el, { attributes: true, attributeFilter: ['style'] });
+		}
+		if (window.jQuery) {
+			jQuery(document).on('elementor/popup/hide', function (e, id) {
+				if (id === POPUP_ID) resetBurger();
+			});
+		}
 	});
 }());
 </script>
