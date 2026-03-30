@@ -241,39 +241,59 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
-	/* ── Badge panier — source : #fkit-floating-count[data-item-count] ── */
-	var badge = document.getElementById('mb-cart-badge');
+	/* ── Badge panier ──
+	   Source principale : #fkit-floating-count
+	   - data-item-count="N" (attribut mis à jour par FKCart)
+	   - textContent       (texte intérieur, aussi mis à jour)
+	   Les deux sont surveillés via MutationObserver pour couvrir
+	   ajout, suppression ET changement de quantité. */
+
+	var badge  = document.getElementById('mb-cart-badge');
+	var fkSrc  = null; // sera assigné au DOMContentLoaded
 
 	function mbSyncBadge(count) {
 		if (!badge) return;
 		count = parseInt(count) || 0;
-		badge.textContent = count > 0 ? count : '';
-		badge.style.display = count > 0 ? 'flex' : 'none';
+		badge.textContent    = count > 0 ? count : '';
+		badge.style.display  = count > 0 ? 'flex' : 'none';
 	}
 
-	function mbReadFkCount() {
-		var src = document.getElementById('fkit-floating-count');
-		if (src) return parseInt( src.getAttribute('data-item-count') ) || 0;
-		return 0;
+	function mbReadCount() {
+		if (!fkSrc) fkSrc = document.getElementById('fkit-floating-count');
+		if (!fkSrc) return 0;
+		/* Priorité à l'attribut data-item-count, fallback sur le texte */
+		var fromAttr = parseInt( fkSrc.getAttribute('data-item-count') );
+		var fromText = parseInt( fkSrc.textContent );
+		return (!isNaN(fromAttr) ? fromAttr : 0) || (!isNaN(fromText) ? fromText : 0);
 	}
 
-	/* Lecture initiale */
 	window.addEventListener('DOMContentLoaded', function() {
-		mbSyncBadge( mbReadFkCount() );
+		fkSrc = document.getElementById('fkit-floating-count');
+		mbSyncBadge( mbReadCount() );
 
-		/* MutationObserver sur #fkit-floating-count — se déclenche à chaque
-		   changement de data-item-count par FKCart (ajout, suppression, quantité) */
-		var src = document.getElementById('fkit-floating-count');
-		if (src && window.MutationObserver) {
+		if (fkSrc && window.MutationObserver) {
 			new MutationObserver(function() {
-				mbSyncBadge( parseInt( src.getAttribute('data-item-count') ) || 0 );
-			}).observe(src, { attributes: true, attributeFilter: ['data-item-count'], childList: true, characterData: true, subtree: true });
+				mbSyncBadge( mbReadCount() );
+			}).observe(fkSrc, {
+				attributes     : true,
+				attributeFilter: ['data-item-count'],
+				childList      : true,   // noeud texte remplacé
+				characterData  : true,   // texte modifié in-place
+				subtree        : true    // descend dans les noeuds texte
+			});
 		}
 	});
 
-	/* Fallback événements WooCommerce */
-	document.body.addEventListener('added_to_cart',          function() { mbSyncBadge( mbReadFkCount() ); });
-	document.body.addEventListener('removed_from_cart',      function() { mbSyncBadge( mbReadFkCount() ); });
-	document.body.addEventListener('wc_fragments_refreshed', function() { mbSyncBadge( mbReadFkCount() ); });
+	/* Filet de sécurité : événements jQuery WooCommerce / FKCart */
+	var wcEvents = [
+		'added_to_cart',
+		'removed_from_cart',
+		'wc_fragments_refreshed',
+		'updated_cart_totals',   // +/- quantité dans le panier WC
+		'updated_wc_div'         // rafraîchissement bloc panier AJAX
+	];
+	wcEvents.forEach(function(evt) {
+		document.body.addEventListener(evt, function() { mbSyncBadge( mbReadCount() ); });
+	});
 })();
 </script>
