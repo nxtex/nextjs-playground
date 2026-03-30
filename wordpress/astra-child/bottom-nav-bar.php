@@ -24,7 +24,7 @@ $mb_nav_items = array(
 	array(
 		'label'  => 'Contact',
 		'href'   => site_url( '/contact' ),
-		'active' => is_page( 'contact' ),   // WP page slug "contact"
+		'active' => is_page( 'contact' ),
 		'type'   => 'link',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
 	),
@@ -43,7 +43,6 @@ $mb_nav_items = array(
 	),
 );
 
-// Determine if any link item is active
 $mb_any_active = false;
 foreach ( $mb_nav_items as $item ) {
 	if ( $item['type'] === 'link' && ! empty( $item['active'] ) ) {
@@ -71,8 +70,8 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	>
 		<span class="mb-bnav__icon">
 			<?php echo $item['icon']; ?>
-			<?php if ( ! empty( $item['cart'] ) && $cart_count > 0 ) : ?>
-				<span class="mb-bnav__badge" id="mb-cart-badge"><?php echo esc_html( $cart_count ); ?></span>
+			<?php if ( ! empty( $item['cart'] ) ) : ?>
+				<span class="mb-bnav__badge" id="mb-cart-badge" style="display:<?php echo $cart_count > 0 ? 'flex' : 'none'; ?>"><?php echo $cart_count > 0 ? esc_html( $cart_count ) : ''; ?></span>
 			<?php endif; ?>
 		</span>
 		<span class="mb-bnav__label"><?php echo esc_html( $item['label'] ); ?></span>
@@ -91,7 +90,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 </nav>
 
 <style>
-/* ── Force light theme always ── */
 .mb-bnav {
 	position: fixed;
 	bottom: 1rem;
@@ -110,7 +108,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	color: #111 !important;
 	opacity: 0;
 	transition: none;
-	/* Width: icons-only by default, expands when an item is active */
 	width: fit-content;
 	max-width: 95vw;
 }
@@ -120,7 +117,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),
 	            transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
 }
-
 .mb-bnav__item {
 	display: flex;
 	align-items: center;
@@ -146,8 +142,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	font-family: inherit;
 }
 .mb-bnav__item:hover { opacity: 0.8; }
-
-/* Active state — only shown when nav has an active item */
 .mb-bnav--has-active .mb-bnav__item--active,
 .mb-bnav__item.mb-bnav__item--modal-active {
 	background: rgba(255,153,0,0.12);
@@ -155,7 +149,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	gap: 6px;
 	max-width: 140px;
 }
-
 .mb-bnav__icon {
 	display: flex;
 	align-items: center;
@@ -163,7 +156,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	flex-shrink: 0;
 	position: relative;
 }
-
 .mb-bnav__badge {
 	position: absolute;
 	top: -6px;
@@ -180,8 +172,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	justify-content: center;
 	line-height: 1;
 }
-
-/* Labels: hidden by default, visible only on active item */
 .mb-bnav__label {
 	font-size: 0.75rem;
 	font-weight: 500;
@@ -251,37 +241,39 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
-	/* ── Badge panier ── */
-	/* FKCart affiche le compte dans .fkcart-title span : "Mon panier(1)" */
-	function mbUpdateCartBadge() {
-		var badge = document.getElementById('mb-cart-badge');
+	/* ── Badge panier — source : #fkit-floating-count[data-item-count] ── */
+	var badge = document.getElementById('mb-cart-badge');
+
+	function mbSyncBadge(count) {
 		if (!badge) return;
-		var count = 0;
-
-		/* 1. Lire le (n) dans le titre FKCart */
-		var titleSpan = document.querySelector('.fkcart-title span');
-		if (titleSpan) {
-			count = parseInt( titleSpan.textContent.replace(/\D/g, '') ) || 0;
-		}
-
-		/* 2. Fallback : compter les lignes d'articles */
-		if (!count) {
-			count = document.querySelectorAll('#fkcart-modal .fkcart--item').length;
-		}
-
-		/* 3. Fallback WC */
-		if (!count) {
-			var wcSpan = document.querySelector('.cart-contents .count');
-			if (wcSpan) count = parseInt(wcSpan.textContent) || 0;
-		}
-
+		count = parseInt(count) || 0;
 		badge.textContent = count > 0 ? count : '';
 		badge.style.display = count > 0 ? 'flex' : 'none';
 	}
 
-	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
-	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
-	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
-	window.addEventListener('DOMContentLoaded', mbUpdateCartBadge);
+	function mbReadFkCount() {
+		var src = document.getElementById('fkit-floating-count');
+		if (src) return parseInt( src.getAttribute('data-item-count') ) || 0;
+		return 0;
+	}
+
+	/* Lecture initiale */
+	window.addEventListener('DOMContentLoaded', function() {
+		mbSyncBadge( mbReadFkCount() );
+
+		/* MutationObserver sur #fkit-floating-count — se déclenche à chaque
+		   changement de data-item-count par FKCart (ajout, suppression, quantité) */
+		var src = document.getElementById('fkit-floating-count');
+		if (src && window.MutationObserver) {
+			new MutationObserver(function() {
+				mbSyncBadge( parseInt( src.getAttribute('data-item-count') ) || 0 );
+			}).observe(src, { attributes: true, attributeFilter: ['data-item-count'], childList: true, characterData: true, subtree: true });
+		}
+	});
+
+	/* Fallback événements WooCommerce */
+	document.body.addEventListener('added_to_cart',          function() { mbSyncBadge( mbReadFkCount() ); });
+	document.body.addEventListener('removed_from_cart',      function() { mbSyncBadge( mbReadFkCount() ); });
+	document.body.addEventListener('wc_fragments_refreshed', function() { mbSyncBadge( mbReadFkCount() ); });
 })();
 </script>
