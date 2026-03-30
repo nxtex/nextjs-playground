@@ -31,13 +31,13 @@ $mb_nav_items = array(
 	array(
 		'label'  => 'Cadeaux',
 		'type'   => 'modal',
-		'action' => 'wll', /* clique .wll-launcher-button-container */
+		'action' => 'wll',
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
 	),
 	array(
 		'label'  => 'Panier',
 		'type'   => 'modal',
-		'action' => 'fkcart', /* clique .fkcart-slider-header */
+		'action' => 'fkcart',
 		'cart'   => true,
 		'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
 	),
@@ -113,7 +113,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1),
 	            transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
 }
-
 .mb-bnav__item {
 	display: flex;
 	align-items: center;
@@ -139,7 +138,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	font-family: inherit;
 }
 .mb-bnav__item:hover { opacity: 0.8; }
-
 .mb-bnav__item--active,
 .mb-bnav__item.mb-bnav__item--modal-active {
 	background: rgba(255,153,0,0.12);
@@ -147,7 +145,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	gap: 6px;
 	max-width: 140px;
 }
-
 .mb-bnav__icon {
 	display: flex;
 	align-items: center;
@@ -155,7 +152,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	flex-shrink: 0;
 	position: relative;
 }
-
 .mb-bnav__badge {
 	position: absolute;
 	top: -6px;
@@ -172,7 +168,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	justify-content: center;
 	line-height: 1;
 }
-
 .mb-bnav__label {
 	font-size: 0.75rem;
 	font-weight: 500;
@@ -193,13 +188,8 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	opacity: 1;
 	margin-left: 2px;
 }
-
 @media (prefers-color-scheme: dark) {
-	.mb-bnav {
-		background: #1a1a1a;
-		border-color: #2a2a2a;
-		box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-	}
+	.mb-bnav { background: #1a1a1a; border-color: #2a2a2a; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 	.mb-bnav__item { color: #6b7280; }
 }
 </style>
@@ -209,40 +199,55 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	var nav = document.getElementById('mb-bottom-nav');
 	if (!nav) return;
 
-	/* ── Animation d'entrée ── */
+	/* ── Animation entrée ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
 
-	/* ── Boutons modals ── */
+	/* ── FKCart — ouvre/ferme la modal directement ── */
+	function mbToggleFkcart() {
+		var modal = document.getElementById('fkcart-modal');
+		if (!modal) return;
+
+		var isOpen = modal.classList.contains('fkcart-show');
+
+		if (isOpen) {
+			/* Fermer : laisser FKCart gérer via son propre bouton close */
+			var closeBtn = modal.querySelector('.fkcart-modal-close, .fkcart-modal-backdrop');
+			if (closeBtn) { closeBtn.click(); return; }
+			/* Fallback manuel */
+			modal.classList.remove('fkcart-show');
+			modal.style.display = 'none';
+			document.body.classList.remove('fkcart-modal-open');
+		} else {
+			/* Ouvrir */
+			modal.style.display = 'block';
+			/* forcer reflow avant d'ajouter la classe d'animation */
+			void modal.offsetWidth;
+			modal.classList.add('fkcart-show');
+			document.body.classList.add('fkcart-modal-open');
+		}
+	}
+
+	/* ── WPLoyalty launcher ── */
+	function mbToggleWll() {
+		var launcher = document.querySelector('.wll-launcher-button-container');
+		if (launcher) launcher.click();
+	}
+
+	/* ── Écoute des boutons ── */
 	nav.querySelectorAll('[data-mb-action]').forEach(function(btn) {
 		btn.addEventListener('click', function() {
 			var action = btn.getAttribute('data-mb-action');
+			if (action === 'fkcart') mbToggleFkcart();
+			if (action === 'wll')    mbToggleWll();
 
-			if (action === 'fkcart') {
-				/* FluentCart — cherche le trigger dans l'ordre */
-				var trigger =
-					document.querySelector('.fkcart-slider-header') ||
-					document.querySelector('[data-fkcart-trigger]') ||
-					document.querySelector('.fkcart-open-trigger') ||
-					document.querySelector('.fkcart-cart-icon');
-				if (trigger) trigger.click();
-			}
-
-			if (action === 'wll') {
-				/* WPLoyalty launcher button */
-				var launcher = document.querySelector('.wll-launcher-button-container');
-				if (launcher) launcher.click();
-			}
-
-			/* Feedback visuel actif sur le bouton modal */
+			/* Feedback visuel bref */
 			nav.querySelectorAll('.mb-bnav__item--modal-active').forEach(function(el) {
 				el.classList.remove('mb-bnav__item--modal-active');
 			});
 			btn.classList.add('mb-bnav__item--modal-active');
-			setTimeout(function() {
-				btn.classList.remove('mb-bnav__item--modal-active');
-			}, 600);
+			setTimeout(function() { btn.classList.remove('mb-bnav__item--modal-active'); }, 600);
 		});
 	});
 
@@ -250,13 +255,21 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	function mbUpdateCartBadge() {
 		var badge = document.getElementById('mb-cart-badge');
 		if (!badge) return;
-		var items = document.querySelectorAll('.fkcart-item, .woocommerce-mini-cart__item, .mini_cart_item');
-		var count = items.length;
+		/* FKCart items dans le DOM */
+		var count = document.querySelectorAll('#fkcart-modal .fkcart--item').length;
+		if (!count) {
+			/* fallback WC fragments */
+			var span = document.querySelector('.fkcart-cart-count, .cart-contents .count');
+			if (span) count = parseInt(span.textContent) || 0;
+		}
 		badge.textContent = count > 0 ? count : '';
 		badge.style.display = count > 0 ? 'flex' : 'none';
 	}
 	document.body.addEventListener('wc_fragments_refreshed', mbUpdateCartBadge);
 	document.body.addEventListener('added_to_cart',          mbUpdateCartBadge);
 	document.body.addEventListener('removed_from_cart',      mbUpdateCartBadge);
+
+	/* Init badge au chargement */
+	window.addEventListener('DOMContentLoaded', mbUpdateCartBadge);
 })();
 </script>
