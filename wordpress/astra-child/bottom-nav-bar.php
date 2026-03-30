@@ -90,6 +90,13 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 </nav>
 
 <style>
+/* ── Masquer les boutons flottants originaux remplaцés par la nav bar ── */
+.wll-site-launcher,
+.fkcart-floating-toggler {
+	display: none !important;
+}
+
+/* ── Nav bar ── */
 .mb-bnav {
 	position: fixed;
 	bottom: 1rem;
@@ -259,17 +266,14 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		return (isNaN(a) ? 0 : a) || (isNaN(t) ? 0 : t);
 	}
 
-	/* ── MutationObserver avec retry ──
-	   FKCart peut injecter #fkit-floating-count après le DOMContentLoaded.
-	   On réessaie toutes les 200 ms pendant 10 s max. */
 	var mbObserverAttached = false;
 
 	function mbAttachObserver() {
 		if (mbObserverAttached) return;
 		var src = document.getElementById('fkit-floating-count');
-		if (!src) return; // pas encore prêt
+		if (!src) return;
 
-		mbSyncBadge( mbReadCount() ); // lecture initiale
+		mbSyncBadge( mbReadCount() );
 		mbObserverAttached = true;
 
 		if (!window.MutationObserver) return;
@@ -284,7 +288,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	}
 
-	/* Lancer au plus tôt, puis retry jusqu'à succès */
 	document.addEventListener('DOMContentLoaded', mbAttachObserver);
 	var mbRetry = setInterval(function() {
 		mbAttachObserver();
@@ -292,9 +295,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	}, 200);
 	setTimeout(function() { clearInterval(mbRetry); }, 10000);
 
-	/* ── Événements jQuery WooCommerce (fired via jQuery custom events) ──
-	   IMPORTANT : WC/FKCart utilisent jQuery $(document).trigger(),
-	   il faut donc écouter via jQuery et non addEventListener. */
 	function mbBindJqEvents() {
 		if (typeof jQuery === 'undefined') return;
 		var $ = jQuery;
@@ -304,7 +304,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	}
 
-	/* jQuery est chargé en defer sur WP — attendre qu'il soit disponible */
 	if (typeof jQuery !== 'undefined') {
 		mbBindJqEvents();
 	} else {
