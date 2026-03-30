@@ -108,14 +108,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	}
 
 	function openPopup() {
-		elementorProFrontend.modules.popup.showPopup({ id: POPUP_ID });
+		jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
 		isOpen = true;
 	}
 
 	function closePopup() {
-		elementorProFrontend.modules.popup.closePopup({ id: POPUP_ID });
+		jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
 		resetBurger();
 	}
 
@@ -129,7 +129,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if (e.key === 'Escape' && isOpen) resetBurger();
 	});
 
-	/* Sync burger quand Elementor ferme la popup de son côté (bouton X, backdrop) */
+	/* Sync quand Elementor ferme tout seul (bouton X natif, backdrop) */
 	window.addEventListener('load', function () {
 		jQuery(document).on('elementor/popup/hide', function (e, id) {
 			if (id === POPUP_ID) resetBurger();
