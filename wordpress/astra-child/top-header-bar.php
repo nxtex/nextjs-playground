@@ -102,20 +102,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	var isOpen   = false;
 
 	function getAPI() {
-		return window.elementorProFrontend && elementorProFrontend.modules && elementorProFrontend.modules.popup
-			? elementorProFrontend.modules.popup
-			: null;
+		return window.elementorProFrontend
+			&& elementorProFrontend.modules
+			&& elementorProFrontend.modules.popup
+			? elementorProFrontend.modules.popup : null;
+	}
+
+	/* Reset burger — appelé quelle que soit la source de fermeture */
+	function resetBurger() {
+		burger.classList.remove('open');
+		btn.setAttribute('aria-expanded', 'false');
+		isOpen = false;
 	}
 
 	function openPopup() {
 		var api = getAPI();
 		if (api) {
 			api.showPopup({ id: POPUP_ID });
-		} else {
-			/* Fallback : trigger jQuery si disponible */
-			if (window.jQuery) {
-				jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
-			}
+		} else if (window.jQuery) {
+			jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
 		}
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
@@ -126,14 +131,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		var api = getAPI();
 		if (api) {
 			api.closePopup({ id: POPUP_ID });
-		} else {
-			if (window.jQuery) {
-				jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
-			}
+		} else if (window.jQuery) {
+			jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
 		}
-		burger.classList.remove('open');
-		btn.setAttribute('aria-expanded', 'false');
-		isOpen = false;
+		resetBurger();
 	}
 
 	if (!btn) return;
@@ -143,7 +144,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	});
 
 	document.addEventListener('keydown', function (e) {
-		if (e.key === 'Escape' && isOpen) closePopup();
+		if (e.key === 'Escape' && isOpen) resetBurger();
+	});
+
+	/* ⭐ Écoute la fermeture native d'Elementor (bouton X, backdrop, etc.)
+	   pour remettre le burger en hamburger même sans passer par notre bouton */
+	window.addEventListener('load', function () {
+		if (window.jQuery) {
+			jQuery(document).on('elementor/popup/hide', function (e, id) {
+				if (id === POPUP_ID) resetBurger();
+			});
+		}
+		/* Fallback sans jQuery : MutationObserver sur la classe elementor-invisible */
+		var popup = document.querySelector('.elementor-' + POPUP_ID);
+		if (popup) {
+			new MutationObserver(function () {
+				var hidden =
+					popup.classList.contains('elementor-invisible') ||
+					popup.style.display === 'none' ||
+					popup.getAttribute('aria-hidden') === 'true';
+				if (hidden && isOpen) resetBurger();
+			}).observe(popup, { attributes: true, attributeFilter: ['class', 'style', 'aria-hidden'] });
+		}
 	});
 }());
 </script>
