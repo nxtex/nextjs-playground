@@ -56,6 +56,11 @@
 	</div>
 </footer>
 
+<?php
+// Bottom nav bar — visible sur toutes les pages
+get_template_part( 'bottom-nav-bar' );
+?>
+
 <?php wp_footer(); ?>
 </body>
 </html>
@@ -79,6 +84,11 @@
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 	box-sizing: border-box !important;
+}
+
+/* ── Espace en bas pour ne pas couvrir le contenu ── */
+body {
+	padding-bottom: 80px !important;
 }
 
 /* ── Footer Monbedo ── */
@@ -116,7 +126,6 @@
 	margin-bottom: 40px;
 }
 
-/* Le wrapper liens occupe les 2 colonnes nav+legal sur desktop */
 .mb-footer-links {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -193,7 +202,6 @@
 		padding: 30px 20px 20px;
 	}
 
-	/* Brand pleine largeur au-dessus */
 	.mb-footer-grid {
 		grid-template-columns: 1fr;
 		gap: 30px;
@@ -206,7 +214,6 @@
 		margin: 0 auto;
 	}
 
-	/* Navigation + Légal en 2 colonnes côte à côte */
 	.mb-footer-links {
 		grid-template-columns: 1fr 1fr;
 		gap: 20px;
