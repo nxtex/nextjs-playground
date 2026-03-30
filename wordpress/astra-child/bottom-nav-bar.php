@@ -90,13 +90,16 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 </nav>
 
 <style>
-/* ── Masquer les boutons flottants originaux remplaцés par la nav bar ── */
+/* CSS fallback — peut être override par les plugins via inline style */
 .wll-site-launcher,
-.fkcart-floating-toggler {
+.fkcart-floating-toggler,
+#fkcart-floating-toggler {
 	display: none !important;
+	visibility: hidden !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
 }
 
-/* ── Nav bar ── */
 .mb-bnav {
 	position: fixed;
 	bottom: 1rem;
@@ -207,6 +210,45 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	var badge = document.getElementById('mb-cart-badge');
 	if (!nav) return;
 
+	/* ── Cacher les launchers flottants originaux ──
+	   Forcé via inline style pour écraser les styles inline des plugins. */
+	var MB_HIDE_SELECTORS = [
+		'.wll-site-launcher',
+		'.fkcart-floating-toggler',
+		'#fkcart-floating-toggler'
+	];
+
+	function mbHideLaunchers() {
+		MB_HIDE_SELECTORS.forEach(function(sel) {
+			document.querySelectorAll(sel).forEach(function(el) {
+				el.style.setProperty('display',        'none',   'important');
+				el.style.setProperty('visibility',     'hidden', 'important');
+				el.style.setProperty('opacity',        '0',      'important');
+				el.style.setProperty('pointer-events', 'none',   'important');
+			});
+		});
+	}
+
+	/* Lancer immédiatement + au DOMContentLoaded */
+	mbHideLaunchers();
+	document.addEventListener('DOMContentLoaded', mbHideLaunchers);
+
+	/* Observer les injections async des plugins */
+	if (window.MutationObserver) {
+		new MutationObserver(function(mutations) {
+			var needsHide = false;
+			mutations.forEach(function(m) {
+				m.addedNodes.forEach(function(node) {
+					if (node.nodeType !== 1) return;
+					var cls = (node.className || '') + ' ' + (node.id || '');
+					if (/wll-site-launcher|fkcart-floating-toggler/.test(cls)) needsHide = true;
+					if (node.querySelector && node.querySelector('.wll-site-launcher, .fkcart-floating-toggler, #fkcart-floating-toggler')) needsHide = true;
+				});
+			});
+			if (needsHide) mbHideLaunchers();
+		}).observe(document.body, { childList: true, subtree: true });
+	}
+
 	/* ── Entrée de la nav ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
@@ -267,24 +309,18 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	}
 
 	var mbObserverAttached = false;
-
 	function mbAttachObserver() {
 		if (mbObserverAttached) return;
 		var src = document.getElementById('fkit-floating-count');
 		if (!src) return;
-
 		mbSyncBadge( mbReadCount() );
 		mbObserverAttached = true;
-
 		if (!window.MutationObserver) return;
 		new MutationObserver(function() {
 			mbSyncBadge( mbReadCount() );
 		}).observe(src, {
-			attributes     : true,
-			attributeFilter: ['data-item-count'],
-			childList      : true,
-			characterData  : true,
-			subtree        : true
+			attributes: true, attributeFilter: ['data-item-count'],
+			childList: true, characterData: true, subtree: true
 		});
 	}
 
@@ -299,19 +335,13 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		if (typeof jQuery === 'undefined') return;
 		var $ = jQuery;
 		var events = 'added_to_cart removed_from_cart wc_fragments_refreshed updated_cart_totals updated_wc_div';
-		$(document).on(events, function() {
-			mbSyncBadge( mbReadCount() );
-		});
+		$(document).on(events, function() { mbSyncBadge( mbReadCount() ); });
 	}
-
 	if (typeof jQuery !== 'undefined') {
 		mbBindJqEvents();
 	} else {
 		var mbJqRetry = setInterval(function() {
-			if (typeof jQuery !== 'undefined') {
-				clearInterval(mbJqRetry);
-				mbBindJqEvents();
-			}
+			if (typeof jQuery !== 'undefined') { clearInterval(mbJqRetry); mbBindJqEvents(); }
 		}, 100);
 		setTimeout(function() { clearInterval(mbJqRetry); }, 8000);
 	}
