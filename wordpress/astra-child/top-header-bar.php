@@ -1,9 +1,7 @@
 <?php
 /**
  * Top Header Bar — Monbedo
- * Coller dans : wp-content/themes/astra-child/top-header-bar.php
  */
-
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
@@ -53,9 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	position: relative; display: flex; align-items: center; justify-content: center;
 	height: 64px; max-width: 1400px; margin: 0 auto; padding: 0 16px;
 }
-.mb-topbar__logo {
-	position: absolute; left: 50%; transform: translateX(-50%);
-}
+.mb-topbar__logo { position: absolute; left: 50%; transform: translateX(-50%); }
 .mb-topbar__logo-img { height: 38px; width: auto; display: block; }
 @media (max-width: 480px) {
 	.mb-topbar__logo-img { height: 28px; }
@@ -100,77 +96,54 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <script>
 (function () {
-	var btn    = document.getElementById('mb-menu-btn');
-	var burger = document.getElementById('mb-wrapper-menu');
-	var popup  = null;
-	var isOpen = false;
+	var POPUP_ID = <?php echo (int) apply_filters( 'mb_menu_popup_id', 4269 ); ?>;
+	var btn      = document.getElementById('mb-menu-btn');
+	var burger   = document.getElementById('mb-wrapper-menu');
+	var isOpen   = false;
 
-	/* Essaie plusieurs sélecteurs pour trouver la popup Elementor */
-	var SELECTORS = [
-		'#elementor-popup-modal-4269',
-		'.elementor-4269',
-		'.elementor-popup-modal',
-		'.dialog-lightbox-widget',
-		'.dialog-widget.dialog-type-lightbox'
-	];
-
-	function findPopup() {
-		for (var i = 0; i < SELECTORS.length; i++) {
-			var el = document.querySelector(SELECTORS[i]);
-			if (el) return el;
-		}
-		return null;
+	function getAPI() {
+		return window.elementorProFrontend && elementorProFrontend.modules && elementorProFrontend.modules.popup
+			? elementorProFrontend.modules.popup
+			: null;
 	}
 
 	function openPopup() {
-		if (!popup) return;
-		popup.style.display = 'block';
+		var api = getAPI();
+		if (api) {
+			api.showPopup({ id: POPUP_ID });
+		} else {
+			/* Fallback : trigger jQuery si disponible */
+			if (window.jQuery) {
+				jQuery(document).trigger('elementor/popup/show', [POPUP_ID, {}]);
+			}
+		}
 		burger.classList.add('open');
 		btn.setAttribute('aria-expanded', 'true');
 		isOpen = true;
 	}
 
 	function closePopup() {
-		if (!popup) return;
-		popup.style.display = 'none';
+		var api = getAPI();
+		if (api) {
+			api.closePopup({ id: POPUP_ID });
+		} else {
+			if (window.jQuery) {
+				jQuery(document).trigger('elementor/popup/hide', [POPUP_ID, {}]);
+			}
+		}
 		burger.classList.remove('open');
 		btn.setAttribute('aria-expanded', 'false');
 		isOpen = false;
 	}
 
-	function init() {
-		popup = findPopup();
-		if (!popup) return false;
-		/* Cache immédiatement dès qu'on la trouve */
-		popup.style.display = 'none';
-		return true;
-	}
-
-	/* Si la popup est déjà dans le DOM */
-	if (!init()) {
-		/* Sinon on attend qu'Elementor l'injecte */
-		var observer = new MutationObserver(function () {
-			if (init()) observer.disconnect();
-		});
-		observer.observe(document.body, { childList: true, subtree: true });
-	}
-
 	if (!btn) return;
 
 	btn.addEventListener('click', function () {
-		/* Tentative de récupérer la popup si pas encore trouvée */
-		if (!popup) init();
 		isOpen ? closePopup() : openPopup();
 	});
 
 	document.addEventListener('keydown', function (e) {
 		if (e.key === 'Escape' && isOpen) closePopup();
-	});
-
-	document.addEventListener('click', function (e) {
-		if (isOpen && popup && !popup.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-			closePopup();
-		}
 	});
 }());
 </script>
