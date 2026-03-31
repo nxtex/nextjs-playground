@@ -112,17 +112,17 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	height: 52px;
 	border-radius: 9999px;
 
-	/* Glassmorphism */
-	background: rgba(15, 15, 15, 0.55) !important;
+	/* Glassmorphism — light */
+	background: rgba(255, 255, 255, 0.60) !important;
 	backdrop-filter: blur(20px) saturate(180%) !important;
 	-webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-	border: 1px solid rgba(255, 255, 255, 0.10) !important;
+	border: 1px solid rgba(255, 255, 255, 0.75) !important;
 	box-shadow:
-		0 8px 32px rgba(0, 0, 0, 0.40),
-		0 2px 8px rgba(0, 0, 0, 0.20),
-		inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+		0 8px 32px rgba(0, 0, 0, 0.10),
+		0 2px 8px rgba(0, 0, 0, 0.06),
+		inset 0 1px 0 rgba(255, 255, 255, 0.90) !important;
 
-	color: #e5e7eb !important;
+	color: #111 !important;
 	opacity: 0;
 	transition: none;
 	width: fit-content;
@@ -144,7 +144,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	max-height: 44px;
 	border-radius: 9999px;
 	text-decoration: none !important;
-	color: rgba(255,255,255,0.5);
+	color: #9ca3af;
 	transition: background 0.2s, color 0.2s, max-width 0.35s cubic-bezier(0.34,1.2,0.64,1), gap 0.2s;
 	max-width: 44px;
 	overflow: hidden;
@@ -159,12 +159,12 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	font-family: inherit;
 }
 .mb-bnav__item:hover {
-	color: rgba(255,255,255,0.85);
-	background: rgba(255,255,255,0.07);
+	color: #374151;
+	background: rgba(0, 0, 0, 0.05);
 }
 .mb-bnav--has-active .mb-bnav__item--active,
 .mb-bnav__item.mb-bnav__item--modal-active {
-	background: rgba(255,153,0,0.18);
+	background: rgba(255,153,0,0.12);
 	color: #ff9900;
 	gap: 6px;
 	max-width: 140px;
