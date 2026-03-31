@@ -90,7 +90,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 </nav>
 
 <style>
-/* CSS fallback — peut être override par les plugins via inline style */
 .wll-site-launcher,
 .fkcart-floating-toggler,
 #fkcart-floating-toggler {
@@ -112,10 +111,18 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	padding: 8px;
 	height: 52px;
 	border-radius: 9999px;
-	background: #ffffff !important;
-	border: 1px solid #e5e7eb !important;
-	box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06) !important;
-	color: #111 !important;
+
+	/* Glassmorphism */
+	background: rgba(15, 15, 15, 0.55) !important;
+	backdrop-filter: blur(20px) saturate(180%) !important;
+	-webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+	border: 1px solid rgba(255, 255, 255, 0.10) !important;
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.40),
+		0 2px 8px rgba(0, 0, 0, 0.20),
+		inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+	color: #e5e7eb !important;
 	opacity: 0;
 	transition: none;
 	width: fit-content;
@@ -137,7 +144,7 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	max-height: 44px;
 	border-radius: 9999px;
 	text-decoration: none !important;
-	color: #9ca3af;
+	color: rgba(255,255,255,0.5);
 	transition: background 0.2s, color 0.2s, max-width 0.35s cubic-bezier(0.34,1.2,0.64,1), gap 0.2s;
 	max-width: 44px;
 	overflow: hidden;
@@ -151,10 +158,13 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	outline: none;
 	font-family: inherit;
 }
-.mb-bnav__item:hover { opacity: 0.8; }
+.mb-bnav__item:hover {
+	color: rgba(255,255,255,0.85);
+	background: rgba(255,255,255,0.07);
+}
 .mb-bnav--has-active .mb-bnav__item--active,
 .mb-bnav__item.mb-bnav__item--modal-active {
-	background: rgba(255,153,0,0.12);
+	background: rgba(255,153,0,0.18);
 	color: #ff9900;
 	gap: 6px;
 	max-width: 140px;
@@ -210,8 +220,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 	var badge = document.getElementById('mb-cart-badge');
 	if (!nav) return;
 
-	/* ── Cacher les launchers flottants originaux ──
-	   Forcé via inline style pour écraser les styles inline des plugins. */
 	var MB_HIDE_SELECTORS = [
 		'.wll-site-launcher',
 		'.fkcart-floating-toggler',
@@ -229,11 +237,9 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	}
 
-	/* Lancer immédiatement + au DOMContentLoaded */
 	mbHideLaunchers();
 	document.addEventListener('DOMContentLoaded', mbHideLaunchers);
 
-	/* Observer les injections async des plugins */
 	if (window.MutationObserver) {
 		new MutationObserver(function(mutations) {
 			var needsHide = false;
@@ -249,12 +255,10 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		}).observe(document.body, { childList: true, subtree: true });
 	}
 
-	/* ── Entrée de la nav ── */
 	requestAnimationFrame(function() {
 		setTimeout(function() { nav.classList.add('mb-bnav--visible'); }, 60);
 	});
 
-	/* ── FKCart toggle ── */
 	function mbToggleFkcart() {
 		var modal = document.getElementById('fkcart-modal');
 		if (!modal) return;
@@ -273,7 +277,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		}
 	}
 
-	/* ── WPLoyalty toggle ── */
 	function mbToggleWll() {
 		var launcher = document.querySelector('.wll-launcher-button-container');
 		if (launcher) launcher.click();
@@ -292,7 +295,6 @@ if ( function_exists( 'WC' ) && WC()->cart ) {
 		});
 	});
 
-	/* ── Badge panier ── */
 	function mbSyncBadge(count) {
 		if (!badge) return;
 		count = parseInt(count) || 0;
